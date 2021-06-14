@@ -198,6 +198,14 @@
 					</label>
 					</div>
 				</div>
+				<div class="col-sm-3">
+					<div class="checkbox">
+					<label>
+						{!! Form::checkbox('is_active_vet', 1, false, ['class' => 'input-icheck']); !!}
+                        {{__('superadmin::lang.update_existing_subscriptions_vet')}}
+					</label>
+					</div>
+				</div>
 
 				
 			</div>

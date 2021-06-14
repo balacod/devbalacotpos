@@ -589,6 +589,7 @@ return [
 "subscribe" => "Suscribir",
 "subscription_interval" => "Intervalo de suscripción",
 "enable_subscription" => "Habilitar suscripción",
+"enable_vet" => "Habilitar Veterinaria",
 "subscription_no" => "Habilitar suscripción",
 "start_subscription" => "Iniciar suscripción",
 "stop_subscription" => "Detener suscripción",

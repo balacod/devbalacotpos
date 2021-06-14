@@ -58,7 +58,7 @@ class ContactController extends Controller
     public function index()
     {
         $type = request()->get('type');
-
+        
         $types = ['supplier', 'customer'];
 
         if (empty($type) || !in_array($type, $types)) {
@@ -108,7 +108,7 @@ class ContactController extends Controller
             )
             ->addColumn(
                 'action',
-                function ($row) {
+                function ($row) {                    
                     $html = '<div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
                         data-toggle="dropdown" aria-expanded="false">' .
@@ -148,6 +148,8 @@ class ContactController extends Controller
                     }
 
                     $html .= '<li class="divider"></li>';
+                        
+
                     if (auth()->user()->can('supplier.view')) {
                         $html .= '
                                 <li>
@@ -180,6 +182,7 @@ class ContactController extends Controller
                                 </a>
                             </li>';
                         }
+
 
                         $html .= '<li>
                                 <a href="' . action('ContactController@show', [$row->id]) . '?view=documents_and_notes">
@@ -267,6 +270,7 @@ class ContactController extends Controller
             ->addColumn(
                 'action',
                 function ($row) {
+
                     $html = '<div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
                         data-toggle="dropdown" aria-expanded="false">' .
@@ -336,6 +340,18 @@ class ContactController extends Controller
                                     ' . __("sale.sells") . '
                                 </a>
                             </li>';
+                        }
+
+                        $modules = json_decode($row->enabled_modules);
+                        foreach ($modules as $value) {
+                            if ("vet" == $value) {
+                                $html .=  '<li>
+                                    <a href="' . action('ContactController@show', [$row->id]). '?view=vet">
+                                        <i class="fas fa-arrow-circle-up" aria-hidden="true"></i>
+                                        ' . __("sale.vet") . '
+                                    </a>
+                                </li>';
+                            }    
                         }
 
                         $html .= '<li>
@@ -413,6 +429,7 @@ class ContactController extends Controller
         if (!$reward_enabled) {
             $contacts->removeColumn('total_rp');
         }
+
         return $contacts->rawColumns(['action', 'opening_balance', 'credit_limit', 'pay_term', 'due', 'return_due', 'name', 'balance'])
                         ->make(true);
     }
@@ -519,7 +536,7 @@ class ContactController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $contact = $this->contactUtil->getContactInfo($business_id, $id);
-
+        
         $reward_enabled = (request()->session()->get('business.enable_rp') == 1 && in_array($contact->type, ['customer', 'both'])) ? true : false;
 
         $contact_dropdown = Contact::contactDropdown($business_id, false, false);
