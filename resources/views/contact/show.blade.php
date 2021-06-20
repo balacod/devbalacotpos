@@ -565,9 +565,9 @@ function tablaMascotas(){
                     mascota.nombre_tratamiento,
                     (mascota.agresivo == 1) ? 'Si' : 'No', 
                     (mascota.sociable == 1) ? 'Si' : 'No', 
-                    '<button type="button"  onclick="editarMascota('+mascota.id+')"  class="d-inline m-1 btn btn-danger btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>'+
-                    '<button type="button"  class="d-inline m-1 btn btn-primary btn-sm"> <span class="fa fa-heartbeat"></span></button>'+
-                    '<button type="button"  class="d-inline m-1 btn btn-success btn-sm" title="hoja de vida"><span class="fa fa-bars"></span></button>'
+                    '<button type="button" onclick="editarMascota('+mascota.id+')" class="d-inline m-1 btn btn-danger btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>'+
+                    '<button type="button" onclick="consutas('+mascota.id+')" class="d-inline m-1 btn btn-primary btn-sm" title="consultas"> <span class="fa fa-heartbeat"></span></button>'+
+                    '<button type="button" class="d-inline m-1 btn btn-success btn-sm" title="hoja de vida"><span class="fa fa-bars"></span></button>'
 
                 ]).draw(); 
             });
@@ -589,6 +589,7 @@ function guardaMascota(){
                 alert('Mascota Registrada');
                 $('#add-mascota').modal('toggle');
                 $('#formMascota')[0].reset();
+                tablaMascotas();
             }else{
                 alert('No se registro la mascota, intente de nuevo');
             }
@@ -597,6 +598,11 @@ function guardaMascota(){
 }
 function editarMascota(){
 
+}
+function consutas(idmascota){
+
+    window.location.href = "/vet/consultas/"+idmascota;
+    
 }
 function closemodal(){
     $('#formMascota')[0].reset();

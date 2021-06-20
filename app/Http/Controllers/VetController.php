@@ -11,6 +11,7 @@ use App\PurchaseLine;
 use App\Transaction;
 use App\User;
 use App\Mascota;
+use App\Consulta;
 use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\NotificationUtil;
@@ -96,6 +97,38 @@ class VetController extends Controller{
         $input = $request->all();
         $lista = Mascota::where('cliente_id',$input['id'])->where('status',1)->get();
         $output = ['datos' => $lista];
+        return $output;
+
+    }
+    public function consultas($id){
+        
+        $mascota = Mascota::find($id);
+        return view('vet.consultas')->with(compact('mascota'));
+
+    }
+    public function listaConsultas(Request $request){
+        $input = $request->all();
+        $lista = Consulta::where('mascota_id',$input['id'])->get();
+        $output = ['datos' => $lista];
+        return $output;
+
+    }
+    public function consulta(Request $request){
+
+        $input = $request->all();
+        $flag = false;
+        $consulta = new  Consulta();
+        $consulta->cliente_id = $input['cliente_id'];
+        $consulta->mascota_id = $input['mascota_id'];
+        $consulta->fecha_consulta = $input['fecha_consulta'];
+        $consulta->titulo_consulta = $input['titulo_consulta'];
+        $consulta->peso_mascota = $input['peso_consulta'];
+        $consulta->observaciones = $input['observaciones'];
+        $result = $consulta->save();
+        if ($result) {
+            $flag = true;
+        }        
+        $output = ['flag' => $flag];
         return $output;
 
     }
