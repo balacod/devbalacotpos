@@ -12,6 +12,7 @@ use App\Transaction;
 use App\User;
 use App\Mascota;
 use App\Consulta;
+use App\formatos\HojaVida;
 use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\NotificationUtil;
@@ -64,32 +65,74 @@ class VetController extends Controller{
 
         $input = $request->all();
         $flag = false;
-        $mascota = new  Mascota();
-        $mascota->cliente_id = $input['idcliente'];
-        $mascota->nombre = $input['nombre'];
-        $mascota->especie = $input['especie'];
-        $mascota->raza = $input['raza'];
-        $mascota->edad = $input['edad'];
-        $mascota->color = $input['color'];
-        $mascota->sexo = $input['sexo'];
-        $mascota->tratamiento = (isset($input['tratamiento'])) ? 1:0;
-        $mascota->nombre_tratamiento = (isset($input['tratamiento'])) ? $input['nombre_tratamiento'] : '';
-        $mascota->alergico = $input['alergico'];
-        $mascota->ojos = $input['ojos'];
-        $mascota->oidos = $input['oidos'];
-        $mascota->piel = $input['piel'];
-        $mascota->pulgas_garrapatas = $input['pulgas_garrapatas'];
-        $mascota->agresivo = (isset($input['agresivo'])) ? 1 : 0;
-        $mascota->sociable = (isset($input['sociable'])) ? 1 : 0;
-        $mascota->nombre_collar = $input['collar_nombre'];
-        $mascota->desparasitado =(isset($input['desparacitado'])) ? 1 : 0;
-        $mascota->status = 1;
-        $mascota->created_at = date('Y-m-d h:m:s');
-        $result  = $mascota->save();
+        
+        if($input['idmas'] != null){
+            $id = $input['idmas'];
+            $mascota = Mascota::where('id',$id)->first();
+            $dataMascota = array(
+                'cliente_id' => $input['idcliente'],
+                'nombre' => $input['nombre'],
+                'especie' => $input['especie'],
+                'raza' => $input['raza'],
+                'edad' => $input['edad'],
+                'color' => $input['color'],
+                'sexo' => $input['sexo'],
+                'tratamiento' => (isset($input['tratamiento'])) ? 1:0,
+                'nombre_tratamiento' => (isset($input['tratamiento'])) ? $input['nombre_tratamiento'] : '',
+                'alergico' => $input['alergico'],
+                'ojos' => $input['ojos'],
+                'oidos' => $input['oidos'],
+                'piel' => $input['piel'],
+                'pulgas_garrapatas' => $input['pulgas_garrapatas'],
+                'agresivo' => (isset($input['agresivo'])) ? 1 : 0,
+                'sociable' => (isset($input['sociable'])) ? 1 : 0,
+                'nombre_collar' => $input['collar_nombre'],
+                'desparasitado' =>(isset($input['desparacitado'])) ? 1 : 0,
+                'created_at' => date('Y-m-d h:m:s'),
+                'updated_at' => date('Y-m-d h:m:s'),
+            );
+            
+            $result = $mascota->update($dataMascota);
+        }else{
+            $dataMascota = array(
+                'cliente_id' => $input['idcliente'],
+                'nombre' => $input['nombre'],
+                'especie' => $input['especie'],
+                'raza' => $input['raza'],
+                'edad' => $input['edad'],
+                'color' => $input['color'],
+                'sexo' => $input['sexo'],
+                'tratamiento' => (isset($input['tratamiento'])) ? 1:0,
+                'nombre_tratamiento' => (isset($input['tratamiento'])) ? $input['nombre_tratamiento'] : '',
+                'alergico' => $input['alergico'],
+                'ojos' => $input['ojos'],
+                'oidos' => $input['oidos'],
+                'piel' => $input['piel'],
+                'pulgas_garrapatas' => $input['pulgas_garrapatas'],
+                'agresivo' => (isset($input['agresivo'])) ? 1 : 0,
+                'sociable' => (isset($input['sociable'])) ? 1 : 0,
+                'nombre_collar' => $input['collar_nombre'],
+                'desparasitado' =>(isset($input['desparacitado'])) ? 1 : 0,
+                'updated_at' => date('Y-m-d h:m:s'),
+            );
+            $result = Mascota::create($dataMascota);  
+        }        
+        
         if ($result) {
             $flag = true;
         }        
         $output = ['flag' => $flag];
+        return $output;
+    }
+    public function show(Request $request){
+
+        $input = $request->all();
+        $flag = false;
+        $mascota = Mascota::findOrFail($input['id']);
+        if (!empty($mascota)) {
+            $flag = true;
+        }
+        $output = ['mascota' => $mascota, 'flag' => $flag];
         return $output;
     }
     public function lista(Request $request){
@@ -130,6 +173,19 @@ class VetController extends Controller{
         }        
         $output = ['flag' => $flag];
         return $output;
+    }
+
+    public function hojavida($id){
+        
+        // dd($id);
+        $this->pdf = new HojaVida('P','mm','Legal');
+        $this->pdf->SetFont('Arial','B',12);        
+        $this->pdf->AddPage();
+        $this->pdf->Head(0,$data);
+        $this->pdf->Body(50,$detalles);
+        $this->pdf->Footer();
+        $this->pdf->Output();
+        exit;
 
     }
 }

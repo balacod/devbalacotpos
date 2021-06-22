@@ -9,7 +9,7 @@
         <div class="col-md-4">
             @if(!empty($view_type) &&  $view_type == 'vet')
                 <h3 style="display: inline-block;">Lista de Mascotas</h3> 
-                <button style="display: inline-block; margin-bottom: 15px;margin-left: 44px;"  data-backdrop="static"  data-keyboard="false" data-toggle="modal" data-target="#add-mascota" class="btn btn-primary" type="button"> <li class="fas fa-plus-circle fa-lg"></li> Mascota</button>
+                <button style="display: inline-block; margin-bottom: 15px;margin-left: 44px;" onclick="addMascota()" data-backdrop="static"  data-keyboard="false" data-toggle="modal" data-target="#add-mascota" class="btn btn-primary" type="button"> <li class="fas fa-plus-circle fa-lg"></li> Mascota</button>
             @else
                 <h3>@lang('contact.view_contact')</h3>
             @endif
@@ -332,16 +332,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onclick="closemodal()" data-dismiss="modal">&times;</button>
-                <h5 class="modal-title">Agregar mascota</h5>
+                <h5 class="modal-title" id="titleModal"></h5>
             </div>
             <form id="formMascota" method="post">
             <input type="hidden" name="idcliente" value="{{$contact->id}}">
+            <input type="hidden" name="idmas" id="idmas">
             <div class="modal-body" style="background: #ffffff;height: 320px !important;">
 
                 <div class="row" >
                     <div class="col-xs-6 col-md-4">
                         <label>Nombre</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control">
+                        <input type="text" name="nombre" id="nombre" class="form-control" >
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <label>Especie</label>
@@ -371,7 +372,7 @@
                         </select>
                     </div>                
                     <div class="col-xs-6 col-md-2 checkbox">
-                        <label class="checkbox-inline tratamiento"><input type="checkbox" name="tratamiento" name="tratamiento">tratamiento</label>
+                        <label class="checkbox-inline tratamiento"><input type="checkbox" name="tratamiento" id="tratamiento" name="tratamiento">tratamiento</label>
                     </div>
                     <div class="col-xs-6 col-md-5" id="divTratamiento">
                         <label>Nombre tratamiento</label>
@@ -407,21 +408,21 @@
                         <input type="text" name="collar_nombre" id="collar_nombre" class="form-control">
                     </div>
                     <div class="col-xs-6 col-md-4 checkbox">
-                        <label class="checkbox-inline"><input type="checkbox" name="desparacitado" name="desparacitado" >Desparacitado</label>
-                        <label class="checkbox-inline"><input type="checkbox" name="agresivo" name="agresivo" >Agresivo</label>
-                        <label style="left: 50px;" class="checkbox-inline"><input type="checkbox" name="sociable" name="sociable" >Sociable</label>
+                        <label class="checkbox-inline"><input type="checkbox" id="desparacitado" name="desparacitado" name="desparacitado" >Desparacitado</label>
+                        <label class="checkbox-inline"><input type="checkbox" id="agresivo" name="agresivo" name="agresivo" >Agresivo</label>
+                        <label style="left: 50px;" class="checkbox-inline"><input id="sociable" type="checkbox" name="sociable" name="sociable" >Sociable</label>
                     </div>
                 </div>
             
                 <br>
                 <div class="row" >
-                    <div class="col-xs-6 col-md-10">
+                    <div class="col-xs-6 col-md-8">
                     </div>
-                    <div class="col-xs-6 col-md-2 pull-right">
+                    <div class="col-xs-6 col-md-4 pull-rightt">
                         <button class="btn btn-primary" type="button" onclick="guardaMascota()">Guardar</button>
+                        <button class="btn btn-danger" type="button" onclick="cancelarAltaMascota()">Cancelar</button>
                     </div>
                 </div>
-
             </div>
             </form>
         </div>
@@ -437,6 +438,13 @@
 
 <div class="modal fade pay_contact_due_modal" tabindex="-1" role="dialog" 
         aria-labelledby="gridSystemModalLabel"></div>
+
+<style type="text/css">
+    .pull-rightt {
+    float: right!important;
+    right: -80px !important;
+}
+</style>
 @stop
 @section('javascript')
 <script type="text/javascript">
@@ -543,9 +551,13 @@ $(document).ready( function(){
     });
    tablaMascotas();
 });
-
+function addMascota(){
+    $("#titleModal").text('Agregar Mascota');
+}
 function tablaMascotas(){
+
     let tablamascota = $('#tabla-mascotas').DataTable();   
+
     let id = $("#sell_list_filter_customer_id").val();
     $.ajax({
         type: 'get',
@@ -553,6 +565,7 @@ function tablaMascotas(){
         dataType: 'json',
         data: {id:id},
         success: function(data){
+        $('#tabla-mascotas').DataTable().clear().draw();
             
             data.datos.forEach(function (mascota){
                 tablamascota.row.add( [
@@ -565,7 +578,7 @@ function tablaMascotas(){
                     mascota.nombre_tratamiento,
                     (mascota.agresivo == 1) ? 'Si' : 'No', 
                     (mascota.sociable == 1) ? 'Si' : 'No', 
-                    '<button type="button" onclick="editarMascota('+mascota.id+')" class="d-inline m-1 btn btn-danger btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>'+
+                    '<button type="button" onclick="editarMascota('+mascota.id+')" data-backdrop="static"  data-keyboard="false" data-toggle="modal" data-target="#add-mascota" class="d-inline m-1 btn btn-danger btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>'+
                     '<button type="button" onclick="consutas('+mascota.id+')" class="d-inline m-1 btn btn-primary btn-sm" title="consultas"> <span class="fa fa-heartbeat"></span></button>'+
                     '<button type="button" class="d-inline m-1 btn btn-success btn-sm" title="hoja de vida"><span class="fa fa-bars"></span></button>'
 
@@ -596,8 +609,73 @@ function guardaMascota(){
         },
     });
 }
-function editarMascota(){
 
+function editarMascota(idMascota){
+
+    $("#titleModal").text('Editar Mascota');
+    // $('#add-mascota').modal('show');
+
+     $.ajax({
+        type: 'get',
+        url: '/vet/show',
+        dataType: 'json',
+        data: {id:idMascota},
+        success: function(result){
+            console.log(result);
+            if(result.flag){
+
+                $("#idmas").val(result.mascota.id);
+                console.log($("#idmas").val());
+                $("#nombre").val(result.mascota.nombre);
+                $("#especie").val(result.mascota.especie);
+                $("#raza").val(result.mascota.raza);
+                $("#edad").val(result.mascota.edad);
+                $("#color").val(result.mascota.color);
+                if(result.mascota.tratamiento == 1){
+                    console.log("si hay tratamiento");
+                    document.getElementById("tratamiento").checked = true;
+                    // $("#tratamiento").prop('checked', true); 
+                    $("#nombre_tratamiento").val(result.mascota.nombre_tratamiento);
+                    $('#divTratamiento').show(); 
+                }else{
+                    document.getElementById("tratamiento").checked = false;
+                    // $("#tratamiento").prop('checked', false); 
+                    $("#nombre_tratamiento").val('');
+                    $('#divTratamiento').hide(); 
+                }
+                if(result.mascota.sexo == "M"){
+                    $("#sexo option[value='M']").attr("selected", true);
+                }else if(result.mascota.sexo == "H"){
+                    $("#sexo option[value='H']").attr("selected", true);
+                }
+                $("#alergico").val(result.mascota.alergico);
+                $("#ojos").val(result.mascota.ojos);
+                $("#oidos").val(result.mascota.oidos);
+                $("#piel").val(result.mascota.piel);
+                $("#piel").val(result.mascota.piel);
+                $("#pulgas_garrapatas").val(result.mascota.pulgas_garrapatas);
+                $("#collar_nombre").val(result.mascota.nombre_collar);
+                $("#collar_nombre").val(result.mascota.nombre_collar);
+                if(result.mascota.desparasitado == 1){
+                    document.getElementById("desparacitado").checked = true;
+                }
+                if(result.mascota.agresivo == 1){
+                    document.getElementById("agresivo").checked = true;
+                }
+                if(result.mascota.sociable == 1){
+                    document.getElementById("sociable").checked = true;
+                }
+
+            }else{
+                
+            }
+        },
+    });
+
+}
+function cancelarAltaMascota(){
+    $('#add-mascota').modal('toggle');
+    $('#formMascota')[0].reset();
 }
 function consutas(idmascota){
 
@@ -611,10 +689,8 @@ function ischecket(){
     $('.tratamiento').find(':checkbox').each(function(){
         if($(this).is(':checked')) {
             $('#divTratamiento').show();
-            // document.getElementById("divTratamiento").style.display = "block";
         }else{
             $('#divTratamiento').hide();
-            // document.getElementById("divTratamiento").style.display = "none";
         }
     }); 
 }
