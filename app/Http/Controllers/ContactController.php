@@ -721,9 +721,10 @@ class ContactController extends Controller
             $business_id = request()->session()->get('user.business_id');
             $user_id = request()->session()->get('user.id');
 
-            $contacts = Contact::where('contacts.business_id', $business_id)
-                            ->leftjoin('customer_groups as cg', 'cg.id', '=', 'contacts.customer_group_id')
-                            ->active();
+            $contacts = Contact::with('mascotas_activas')
+                ->where('contacts.business_id', $business_id)
+                ->leftjoin('customer_groups as cg', 'cg.id', '=', 'contacts.customer_group_id')
+                ->active();
 
             $selected_contacts = User::isSelectedContacts($user_id);
             if ($selected_contacts) {
@@ -759,12 +760,14 @@ class ContactController extends Controller
                 'cg.price_calculation_type',
                 'cg.selling_price_group_id'
             )
-                    ->onlyCustomers();
+            ->onlyCustomers();
 
             if (request()->session()->get('business.enable_rp') == 1) {
                 $contacts->addSelect('total_rp');
             }
+
             $contacts = $contacts->get();
+            
             return json_encode($contacts);
         }
     }

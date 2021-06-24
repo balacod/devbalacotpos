@@ -110,6 +110,11 @@ class Transaction extends Model
         return $this->belongsTo(\App\TypesOfService::class, 'types_of_service_id');
     }
 
+    public function mascota()
+    {
+        return $this->belongsTo(Mascota::class,'mascota_id');
+    }
+
     /**
      * Retrieves documents path if exists
      */

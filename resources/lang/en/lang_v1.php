@@ -773,6 +773,8 @@ return [
     'edit_type_of_service' => 'Edit type of service',
     'types_of_service_help' => 'Type of service means services like dine-in, parcel, home delivery, third party delivery etc.',
     'select_types_of_service' => 'Select types of service',
+    'select_contact_pets' => 'Select a pet',
+    'select_contact_pets_no_results' => 'No pets',
     'types_of_service_custom_field_help' => 'Four custom fields will be available while adding sell',
     'service_custom_field_1' => 'Custom Field 1',
     'service_custom_field_2' => 'Custom Field 2',
