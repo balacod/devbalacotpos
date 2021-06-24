@@ -124,6 +124,24 @@ class VetController extends Controller{
         $output = ['flag' => $flag];
         return $output;
     }
+    public function alta(Request $request){
+
+        $input = $request->all();
+        $flag = false;
+        $consulta = Consulta::where('id',$input['idConsulta'])->first();
+        $dataAlta = array(
+            'observaciones_salida' => $input['texto'],
+            'status_consulta' => 2,
+            'fecha_salida' => date('Y-m-d'),
+        );
+        
+        $result = $consulta->update($dataAlta);
+         if ($result) {
+            $flag = true;
+        }        
+        $output = ['flag' => $flag];
+        return $output;
+    }
     public function show(Request $request){
 
         $input = $request->all();
@@ -151,10 +169,16 @@ class VetController extends Controller{
     }
     public function listaConsultas(Request $request){
         $input = $request->all();
-        $lista = Consulta::where('mascota_id',$input['id'])->get();
+        $lista = Consulta::where('mascota_id',$input['id'])->where('status_consulta',1)->get();
         $output = ['datos' => $lista];
         return $output;
 
+    }
+    public function listaConsultasAlta(Request $request){
+        $input = $request->all();
+        $lista = Consulta::where('mascota_id',$input['id'])->where('status_consulta',2)->get();
+        $output = ['datos' => $lista];
+        return $output;
     }
     public function consulta(Request $request){
 
@@ -176,16 +200,47 @@ class VetController extends Controller{
     }
 
     public function hojavida($id){
-        
-        // dd($id);
+
+        $datos = DB::table('mascota AS m')->select("c.name", "c.first_name", "c.last_name", "c.mobile", "c.address_line_1", "c.address_line_2", "c.city", "c.state",  "c.zip_code", "m.*")
+                    ->join('contacts as c', 'c.id','=','m.cliente_id')
+                    ->join('business AS b', 'b.id','=','c.business_id')
+                    ->where('m.id',$id)
+                    ->get();        
+        $consulta = DB::table('mascota AS m')->select("c.*")
+                    ->join('mascota_consulta AS c', 'c.mascota_id','=','m.id')
+                    ->where('m.id',$id)
+                    ->get();
+
         $this->pdf = new HojaVida('P','mm','Legal');
         $this->pdf->SetFont('Arial','B',12);        
         $this->pdf->AddPage();
-        $this->pdf->Head(0,$data);
-        $this->pdf->Body(50,$detalles);
+        $this->pdf->Head(0,$datos[0]);
+        $this->pdf->Body(50,$consulta);
         $this->pdf->Footer();
         $this->pdf->Output();
         exit;
 
+    }
+    public function hojaconsulta($consulta_di){
+
+        $datos = DB::table('mascota AS m')->select("c.name", "c.first_name", "c.last_name", "c.mobile", "c.address_line_1", "c.address_line_2", "c.city", "c.state",  "c.zip_code", "m.*")
+                    ->join('contacts as c', 'c.id','=','m.cliente_id')
+                    ->join('business AS b', 'b.id','=','c.business_id')
+                    ->join('mascota_consulta AS mc', 'mc.mascota_id','=','m.id')
+                    ->where('mc.id',$consulta_di)
+                    ->get();        
+        $consulta = DB::table('mascota AS m')->select("c.*")
+                    ->join('mascota_consulta AS c', 'c.mascota_id','=','m.id')
+                    ->where('c.id',$consulta_di)
+                    ->get();
+
+        $this->pdf = new HojaVida('P','mm','Legal');
+        $this->pdf->SetFont('Arial','B',12);        
+        $this->pdf->AddPage();
+        $this->pdf->Head(0,$datos[0]);
+        $this->pdf->Body(50,$consulta);
+        $this->pdf->Footer();
+        $this->pdf->Output();
+        exit;
     }
 }

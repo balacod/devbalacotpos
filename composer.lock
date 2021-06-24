@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5403c2ee6ee3f80b14e6ffc2c7aa09e7",
+    "content-hash": "d04e77026977e9986036665f640bfd82",
     "packages": [
         {
             "name": "aloha/twilio",
@@ -390,6 +390,58 @@
                 "pdf"
             ],
             "time": "2020-09-07T11:50:18+00:00"
+        },
+        {
+            "name": "codedge/laravel-fpdf",
+            "version": "1.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codedge/laravel-fpdf.git",
+                "reference": "b33e4f32c0a2c4e7c17631179dc726ccd1f78b39"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codedge/laravel-fpdf/zipball/b33e4f32c0a2c4e7c17631179dc726ccd1f78b39",
+                "reference": "b33e4f32c0a2c4e7c17631179dc726ccd1f78b39",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "5.*|6.*",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codedge\\Fpdf\\FpdfServiceProvider"
+                    ],
+                    "aliases": {
+                        "Fpdf": "Codedge\\Fpdf\\Facades\\Fpdf"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codedge\\Fpdf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Holger Lösken",
+                    "email": "holger.loesken@codedge.de"
+                }
+            ],
+            "description": "Laravel package to include Fpdf. It ships with Fpdf 1.81.",
+            "keywords": [
+                "fpdf",
+                "laravel",
+                "pdf"
+            ],
+            "time": "2019-12-27T23:06:03+00:00"
         },
         {
             "name": "composer/semver",
@@ -9623,7 +9675,6 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
