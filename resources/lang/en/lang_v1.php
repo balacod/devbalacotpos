@@ -700,6 +700,7 @@ return [
     'blood_group' => 'Blood Group',
     'divorced' => 'Divorced',
     'contact_no' => 'Contact Number',
+    'column_pet' => 'Pet',
     'fb_link' => 'Facebook Link',
     'twitter_link' => 'Twitter Link',
     'social_media' => 'Social Media :number',

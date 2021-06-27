@@ -678,6 +678,7 @@ return [
 "blood_group" => "Grupo sanguíneo",
 "divorced" => "Divorciado",
 "contact_no" => "Número de contacto",
+"column_pet" => "Mascota",
 "fb_link" => "Enlace de Facebook",
 "twitter_link" => "Enlace de Twitter",
 "social_media" => "Redes sociales :number",
