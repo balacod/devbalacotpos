@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<p><strong>@lang('sale.invoice_no'):</strong> {{$transaction->invoice_no}}</p>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="form-group" style="width: 100% !important">
 			<div class="input-group">
 				<span class="input-group-addon">
@@ -22,7 +22,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-6">
 		<div class="form-group">
 			<div class="input-group">
 				<div class="input-group-btn">
@@ -47,7 +47,7 @@
 </div>
 <div class="row">
 	@if(!empty($pos_settings['show_invoice_layout']))
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="form-group">
 		{!! Form::select('invoice_layout_id', 
 					$invoice_layouts, $transaction->location->invoice_layout_id, ['class' => 'form-control select2', 'placeholder' => __('lang_v1.select_invoice_layout'), 'id' => 'invoice_layout_id']); !!}
@@ -58,7 +58,7 @@
 	<input type="hidden" name="pay_term_type" id="pay_term_type" value="{{$transaction->pay_term_type}}">
 	
 	@if(!empty($commission_agent))
-		<div class="col-sm-4">
+		<div class="col-sm-6">
 			<div class="form-group">
 			{!! Form::select('commission_agent', 
 						$commission_agent, $transaction->commission_agent, ['class' => 'form-control select2', 'placeholder' => __('lang_v1.commission_agent')]); !!}
@@ -66,7 +66,7 @@
 		</div>
 		@endif
 	@if(!empty($pos_settings['enable_transaction_date']))
-		<div class="col-md-4 col-sm-6">
+		<div class="col-md-6">
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
@@ -78,7 +78,7 @@
 		</div>
 	@endif
 	@if(config('constants.enable_sell_in_diff_currency') == true)
-		<div class="col-md-4 col-sm-6">
+		<div class="col-md-6">
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
@@ -90,7 +90,7 @@
 		</div>
 	@endif
 	@if(!empty($transaction->selling_price_group_id))
-		<div class="col-md-4 col-sm-6">
+		<div class="col-md-6">
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
@@ -107,7 +107,7 @@
 	@endif
 
 	@if(in_array('types_of_service', $enabled_modules) && !empty($transaction->types_of_service))
-		<div class="col-md-4 col-sm-6">
+		<div class="col-md-6">
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon">
@@ -129,6 +129,18 @@
 			@endif
 		</div>
 	@endif
+
+    <div class="col-md-6 col-sm-8">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-paw text-primary"></i>
+                </span>
+                {!! Form::select('mascota_id', $transaction->contact->mascotas_activas->pluck('nombre','id'), null, ['class' => 'form-control', 'id' => 'contact_pets_id', 'style' => 'width: 100%;', 'data-placeholder' => __('lang_v1.select_contact_pets'), 'data-no-results' => __('lang_v1.select_contact_pets_no_results')]); !!}
+            </div>
+        </div>
+    </div>
+
 	@if($transaction->status == 'draft' && !empty($pos_settings['show_invoice_scheme']))
 		<div class="col-sm-3">
 			<div class="form-group">
@@ -210,3 +222,7 @@
 		</table>
 	</div>
 </div>
+
+<script type="text/javascript">
+	var edit_mascota_activa = {{ $transaction->mascota_id ? $transaction->mascota_id : 'null' }};
+</script>

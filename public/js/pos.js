@@ -1871,6 +1871,15 @@ function set_default_customer() {
     }
 
     customer_set = true;
+
+    var contact_pets_select = $('#contact_pets_id');
+
+    // $.each(edit_mascotas_activas, (index, item) => {
+    //     let newOption = new Option(item.nombre, item.id, false, false);
+    //     contact_pets_select.append(newOption);
+    // })
+
+    contact_pets_select.val(edit_mascota_activa).trigger('change');
 }
 
 //Set the location and initialize printer

@@ -181,6 +181,7 @@ class TransactionUtil extends Util
             'exchange_rate' => !empty($input['exchange_rate']) ?
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
             'selling_price_group_id' => isset($input['selling_price_group_id']) ? $input['selling_price_group_id'] : null,
+            'mascota_id' => isset($input['mascota_id']) ? $input['mascota_id'] : null,
             'pay_term_number' => isset($input['pay_term_number']) ? $input['pay_term_number'] : null,
             'pay_term_type' => isset($input['pay_term_type']) ? $input['pay_term_type'] : null,
             'is_suspend' => !empty($input['is_suspend']) ? 1 : 0,
