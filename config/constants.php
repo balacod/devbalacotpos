@@ -43,6 +43,7 @@ return [
     'quantity_precision' => 2,  //Maximum 4
 
     'product_img_path' => 'img',
+    'product_img_vet' => 'vet',
 
     'enable_sell_in_diff_currency' => false,
     'currency_exchange_rate' => 1,

@@ -13,6 +13,7 @@ use App\User;
 use App\Mascota;
 use App\Consulta;
 use App\formatos\HojaVida;
+use App\formatos\HojaVidaMascota;
 use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\NotificationUtil;
@@ -24,6 +25,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\TransactionPayment;
 use Spatie\Activitylog\Models\Activity;
+use App\Utils\ProductUtil;
 
 class VetController extends Controller{
 
@@ -32,7 +34,7 @@ class VetController extends Controller{
     protected $transactionUtil;
     protected $moduleUtil;
     protected $notificationUtil;
-
+    protected $productUtil;
     /**
      * Constructor
      *
@@ -40,12 +42,15 @@ class VetController extends Controller{
      * @return void
      */
     public function __construct(
+        ProductUtil $productUtil,
         Util $commonUtil,
         ModuleUtil $moduleUtil,
         TransactionUtil $transactionUtil,
         NotificationUtil $notificationUtil,
         ContactUtil $contactUtil
     ) {
+        $this->productUtil = $productUtil;
+
         $this->commonUtil = $commonUtil;
         $this->contactUtil = $contactUtil;
         $this->moduleUtil = $moduleUtil;
@@ -129,10 +134,13 @@ class VetController extends Controller{
         $input = $request->all();
         $flag = false;
         $consulta = Consulta::where('id',$input['idConsulta'])->first();
+        
         $dataAlta = array(
-            'observaciones_salida' => $input['texto'],
+            'observaciones_salida' => $input['observaciones_alta'],
+            'fecha_salida' => $input['fecha_alta'],
+            'hora_salida' => $input['hora_alta'],
             'status_consulta' => 2,
-            'fecha_salida' => date('Y-m-d'),
+            // 'fecha_salida' => date('Y-m-d'),
         );
         
         $result = $consulta->update($dataAlta);
@@ -183,14 +191,30 @@ class VetController extends Controller{
     public function consulta(Request $request){
 
         $input = $request->all();
+        $file_name = null;
+
+        if(isset($_FILES['archivo'])){
+            $file = $input['archivo'];
+            if ($file->getSize() <= config('constants.document_size_limit')) {
+                $new_file_name = time() . '_' . mt_rand() . '_' . $file->getClientOriginalName();
+                if ($file->storeAs('/vet', $new_file_name)) {
+                    $file_name = $new_file_name;
+                }
+            }
+        }
+        
+        $input['archivo'] = ($file_name != null) ? $filename : ''; 
+
         $flag = false;
         $consulta = new  Consulta();
         $consulta->cliente_id = $input['cliente_id'];
         $consulta->mascota_id = $input['mascota_id'];
+        $consulta->hora_entrada = $input['hora'];
         $consulta->fecha_consulta = $input['fecha_consulta'];
         $consulta->titulo_consulta = $input['titulo_consulta'];
         $consulta->peso_mascota = $input['peso_consulta'];
         $consulta->observaciones = $input['observaciones'];
+        $consulta->archivo_adjunto = $input['archivo'];
         $result = $consulta->save();
         if ($result) {
             $flag = true;
@@ -211,7 +235,7 @@ class VetController extends Controller{
                     ->where('m.id',$id)
                     ->get();
 
-        $this->pdf = new HojaVida('P','mm','Legal');
+        $this->pdf = new HojaVidaMascota('P','mm','Legal');
         $this->pdf->SetFont('Arial','B',12);        
         $this->pdf->AddPage();
         $this->pdf->Head(0,$datos[0]);

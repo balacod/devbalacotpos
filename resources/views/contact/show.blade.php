@@ -7,17 +7,13 @@
 <section class="content no-print">
     <div class="row no-print">
         <div class="col-md-4">
-            @if(!empty($view_type) &&  $view_type == 'vet')
-                <h3 style="display: inline-block;">Lista de Mascotas</h3> 
-                <button style="display: inline-block; margin-bottom: 15px;margin-left: 44px;" onclick="addMascota()" data-backdrop="static"  data-keyboard="false" data-toggle="modal" data-target="#add-mascota" class="btn btn-primary" type="button"> <li class="fas fa-plus-circle fa-lg"></li> Mascota</button>
-            @else
-                <h3>@lang('contact.view_contact')</h3>
-            @endif
+            <h3>@lang('contact.view_contact')</h3>
         </div>
         <div class="col-md-4 col-xs-12 mt-15 pull-right">
             {!! Form::select('contact_id', $contact_dropdown, $contact->id , ['class' => 'form-control select2', 'id' => 'contact_id']); !!}
         </div>
     </div>
+    <!-- info contact HIDDEN -->
     <div class="hide print_table_part">
         <style type="text/css">
             .info_col {
@@ -44,30 +40,12 @@
             </div>
         </div>
     </div>
+
     <input type="hidden" id="sell_list_filter_customer_id" value="{{$contact->id}}">
     <input type="hidden" id="purchase_list_filter_supplier_id" value="{{$contact->id}}">
     <br>
-    @if(!empty($view_type) &&  $view_type == 'vet')
-
-       <table class="table table-striped" id="tabla-mascotas">
-           <thead>
-               <tr>
-                   <th>Mascota</th>
-                   <th>Especie</th>
-                   <th>Raza</th>
-                   <th>Color</th>
-                   <th>Sexo</th>
-                   <th>Tratamiento</th>
-                   <th>Nombre <br> Tratamiento</th>
-                   <th>Agresivo</th>
-                   <th>Sociable</th>
-                   <th>Acciones</th>
-               </tr>
-           </thead>
-           <tbody>
-           </tbody>
-       </table>
-    @else
+  
+        <!-- INFO DEL CLIENTE -->
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-solid">
@@ -82,6 +60,15 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs nav-justified">
                         <li class="
+                                @if(!empty($view_type) &&  $view_type == 'vet')
+                                    active
+                                @else
+                                    ''
+                                @endif">
+                            <a href="#ledger_vet" data-toggle="tab" aria-expanded="true"><i class="fas fa-cat" aria-hidden="true"></i> @lang('lang_v1.vet')</a>
+                        </li>
+
+                        <li class="
                                 @if(!empty($view_type) &&  $view_type == 'ledger')
                                     active
                                 @else
@@ -89,6 +76,7 @@
                                 @endif">
                             <a href="#ledger_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-scroll" aria-hidden="true"></i> @lang('lang_v1.ledger')</a>
                         </li>
+
                         @if(in_array($contact->type, ['both', 'supplier']))
                             <li class="
                                 @if(!empty($view_type) &&  $view_type == 'purchase')
@@ -127,6 +115,7 @@
                                 </li>
                             @endif
                         @endif
+
                         <li class="
                                 @if(!empty($view_type) &&  $view_type == 'documents_and_notes')
                                     active
@@ -181,6 +170,38 @@
                     </ul>
 
                     <div class="tab-content">
+
+                        
+                        <div class="tab-pane
+                                    @if(!empty($view_type) &&  $view_type == 'vet')
+                                        active
+                                    @else
+                                        ''
+                                    @endif"
+                                id="ledger_vet">
+                            <br>
+                            <h3 style="display: inline-block;">Lista de Mascotas</h3> 
+                            <button style="display: inline-block; margin-bottom: 15px;margin-left: 44px;" onclick="addMascota()" data-backdrop="static"  data-keyboard="false" data-toggle="modal" data-target="#add-mascota" class="btn btn-primary" type="button"> <li class="fas fa-plus-circle fa-lg"></li> Mascota</button>
+
+                            <table class="table table-striped" id="tabla-mascotas">
+                                <thead>
+                                    <tr>
+                                       <th>Mascota</th>
+                                       <th>Especie</th>
+                                       <th>Raza</th>
+                                       <th>Color</th>
+                                       <th>Sexo</th>
+                                       <th>Tratamiento</th>
+                                       <th>Nombre <br> Tratamiento</th>
+                                       <th>Agresivo</th>
+                                       <th>Sociable</th>
+                                       <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                           </table>
+                        </div>
                         <div class="tab-pane
                                     @if(!empty($view_type) &&  $view_type == 'ledger')
                                         active
@@ -324,7 +345,7 @@
                 </div>
             </div>
         </div>
-    @endif
+    
 </section>
 
 <div class="modal fade" id="add-mascota"  role="dialog" >

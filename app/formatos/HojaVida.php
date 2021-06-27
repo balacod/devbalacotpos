@@ -209,7 +209,8 @@ class HojaVida extends Fpdf{
       $this->setY($y);
       $this->setX($x-1);
       $this->SetFont('Arial','B',10);        
-      $this->HCell(35,5,utf8_decode("FECHA"),1,0,'C');
+      $this->HCell(15,5,utf8_decode("HORA"),1,0,'C');
+      $this->HCell(20,5,utf8_decode("FECHA"),1,0,'C');
       $this->HCell(101,5,utf8_decode("OBSERVACIONES DE SERVICIO"),1,0,'C');
       $this->HCell(20,5,utf8_decode("PESO"),1,0,'C');
       $this->HCell(40,5,utf8_decode("FIRMA INGRESO"),1,0,'C');
@@ -223,7 +224,8 @@ class HojaVida extends Fpdf{
          $this->setY($y);
          $this->setX($x-1);
          $this->SetFont('Arial','',10);        
-         $this->HCell(35,20,$consulta->fecha_consulta,1,0,'C');
+         $this->HCell(15,20,$consulta->hora_entrada,1,0,'C');
+         $this->HCell(20,20,$consulta->fecha_consulta,1,0,'C');
          $first400 = ""; $first401 = ""; $first402 = "";
          if(strlen($consulta->observaciones) <> 80){
             $first400 = substr($consulta->observaciones, 0, 80);
@@ -255,7 +257,8 @@ class HojaVida extends Fpdf{
       $this->setY($y);
       $this->setX($x-1);
       $this->SetFont('Arial','B',10);        
-      $this->HCell(35,5,utf8_decode("FECHA"),1,0,'C');
+      $this->HCell(15,5,utf8_decode("HORA"),1,0,'C');
+      $this->HCell(20,5,utf8_decode("FECHA"),1,0,'C');
       $this->HCell(121,5,utf8_decode("OBSERVACIONES DE SPA CANINO"),1,0,'C');
       $this->HCell(40,5,utf8_decode("FIRMA SALIDA"),1,0,'C');
 
@@ -269,7 +272,8 @@ class HojaVida extends Fpdf{
          $this->setY($y);
          $this->setX($x-1);
          $this->SetFont('Arial','',10);        
-         $this->HCell(35,20,$consulta->fecha_salida,1,0,'C');
+         $this->HCell(15,20,$consulta->hora_salida,1,0,'C');
+         $this->HCell(20,20,$consulta->fecha_salida,1,0,'C');
          $first300 = ""; $first301 = ""; $first302 = "";
          if(strlen($consulta->observaciones_salida) <> 70){
             $first300 = substr($consulta->observaciones_salida, 0, 70);

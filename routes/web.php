@@ -51,7 +51,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('brands', 'BrandController');
     
-    Route::resource('payment-account', 'PaymentAccountController');
+    // Route::resource('payment-account', 'PaymentAccountController');
 
     Route::resource('tax-rates', 'TaxRateController');
 
@@ -69,8 +69,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/contacts/customers', 'ContactController@getCustomers');
     Route::resource('contacts', 'ContactController');
 
-    //veterinaria
-    // Route::post('vet/store', 'VetController@store');
+    //veterinari
     Route::get('vet/list', 'VetController@lista');
     Route::get('vet/lista-consulta', 'VetController@listaConsultas');
     Route::get('vet/lista-linea', 'VetController@listaConsultasAlta');
@@ -372,7 +371,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
 Route::middleware(['EcomApi'])->prefix('api/ecom')->group(function () {
     Route::get('products/{id?}', 'ProductController@getProductsApi');
-    Route::get('categories', 'CategoryController@getCategoriesApi');
+    // Route::get('categories', 'CategoryController@getCategoriesApi');
     Route::get('brands', 'BrandController@getBrandsApi');
     Route::post('customers', 'ContactController@postCustomersApi');
     Route::get('settings', 'BusinessController@getEcomSettings');

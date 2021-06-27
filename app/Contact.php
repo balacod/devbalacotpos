@@ -269,4 +269,15 @@ class Contact extends Authenticatable
 
         return $address;
     }
+
+    public function mascotas()
+    {
+        return $this->hasMany(Mascota::class,'cliente_id');
+    }
+
+    public function mascotas_activas()
+    {
+        return $this->mascotas()->where('status',1);
+    }
+
 }

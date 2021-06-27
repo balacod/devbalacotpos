@@ -117,6 +117,10 @@
 					<br/>
 					<b>{{ $receipt_details->customer_label }}</b> {{ $receipt_details->customer_name }} <br>
 				@endif
+				@if($receipt_details->mascota)
+					<br/>
+					<b>{{ $receipt_details->customer_label == 'Cliente' ? 'Mascota' : 'Pet' }}</b> {{ $receipt_details->mascota['nombre'] }} <br>
+				@endif
 				@if(!empty($receipt_details->customer_info))
 					{!! $receipt_details->customer_info !!}
 				@endif
