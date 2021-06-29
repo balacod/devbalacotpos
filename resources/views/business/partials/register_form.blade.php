@@ -121,24 +121,24 @@
 </div>
 <div class="col-md-6">
     <div class="form-group">
-    {!! Form::label('zip_code', __('business.zip_code') . ':*') !!}
+    {!! Form::label('zip_code', __('business.zip_code') . ':') !!}
     <div class="input-group">
         <span class="input-group-addon">
             <i class="fa fa-map-marker"></i>
         </span>
-        {!! Form::text('zip_code', null, ['class' => 'form-control','placeholder' => __('business.zip_code_placeholder'), 'required']); !!}
+        {!! Form::text('zip_code', null, ['class' => 'form-control','placeholder' => __('business.zip_code_placeholder')]); !!}
     </div>
     </div>
 </div>
 <div class="clearfix"></div>
 <div class="col-md-6">
     <div class="form-group">
-    {!! Form::label('landmark', __('business.landmark') . ':*') !!}
+    {!! Form::label('landmark', __('business.landmark') . ':') !!}
     <div class="input-group">
         <span class="input-group-addon">
             <i class="fa fa-map-marker"></i>
         </span>
-        {!! Form::text('landmark', null, ['class' => 'form-control','placeholder' => __('business.landmark'), 'required']); !!}
+        {!! Form::text('landmark', null, ['class' => 'form-control','placeholder' => __('business.landmark')]); !!}
     </div>
     </div>
 </div>

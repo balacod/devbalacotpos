@@ -897,14 +897,12 @@ class TransactionUtil extends Util
         if ($il->show_customer == 1) {
             $output['customer_label'] = !empty($il->customer_label) ? $il->customer_label : '';
             $output['customer_name'] = !empty($customer->name) ? $customer->name: '';
-            $output['customer_mobile'] = $customer->mobile;
             
             if (!empty($output['customer_name']) && $receipt_printer_type != 'printer') {
                 $output['customer_info'] .= $customer->contact_address;
                 if (!empty($customer->contact_address)) {
                     $output['customer_info'] .= '<br>';
                 }
-                $output['customer_info'] .= $customer->mobile;
                 if (!empty($customer->landline)) {
                     $output['customer_info'] .= ', ' . $customer->landline;
                 }
@@ -930,6 +928,10 @@ class TransactionUtil extends Util
             if (!empty($temp)) {
                 $output['customer_custom_fields'] .= implode('<br>', $temp);
             }
+        }
+
+        if ($il->show_customer_phone == 1) {
+            $output['customer_mobile'] = $customer->mobile;
         }
 
         if ($il->show_reward_point == 1) {

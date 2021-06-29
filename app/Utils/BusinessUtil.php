@@ -65,7 +65,7 @@ class BusinessUtil extends Util
         Contact::create($customer);
 
         //create default invoice setting for new business
-        InvoiceScheme::create(['name' => 'Default',
+        InvoiceScheme::create(['name' => 'Defecto',
                             'scheme_type' => 'blank',
                             'prefix' => '',
                             'start_number' => 1,
@@ -74,35 +74,38 @@ class BusinessUtil extends Util
                             'business_id' => $business_id
                         ]);
         //create default invoice layour for new business
-        InvoiceLayout::create(['name' => 'Default',
+        InvoiceLayout::create(['name' => 'Defecto',
                         'header_text' => null,
-                        'invoice_no_prefix' => 'Invoice No.',
-                        'invoice_heading' => 'Invoice',
+                        'invoice_no_prefix' => 'Factura No.',
+                        'invoice_heading' => 'Factura',
                         'sub_total_label' => 'Subtotal',
-                        'discount_label' => 'Discount',
-                        'tax_label' => 'Tax',
+                        'discount_label' => 'Descuento',
+                        'tax_label' => 'Impuesto',
                         'total_label' => 'Total',
                         'show_landmark' => 1,
-                        'show_city' => 1,
-                        'show_state' => 1,
-                        'show_zip_code' => 1,
-                        'show_country' => 1,
+                        'show_city' => 0,
+                        'show_state' => 0,
+                        'show_zip_code' => 0,
+                        'show_country' => 0,
                         'highlight_color' => '#000000',
                         'footer_text' => '',
                         'is_default' => 1,
                         'business_id' => $business_id,
+                        'design' => 'slim',
                         'invoice_heading_not_paid' => '',
                         'invoice_heading_paid' => '',
-                        'total_due_label' => 'Total Due',
-                        'paid_label' => 'Total Paid',
+                        'total_due_label' => 'Total adeudado',
+                        'paid_label' => 'Total pagado',
                         'show_payments' => 1,
                         'show_customer' => 1,
-                        'customer_label' => 'Customer',
-                        'table_product_label' => 'Product',
-                        'table_qty_label' => 'Quantity',
-                        'table_unit_price_label' => 'Unit Price',
+                        'customer_label' => 'Cliente',
+                        'table_product_label' => 'Producto',
+                        'table_qty_label' => 'Cant',
+                        'table_unit_price_label' => 'Prec Un',
                         'table_subtotal_label' => 'Subtotal',
-                        'date_label' => 'Date'
+                        'date_label' => 'Fecha',
+                        'show_sku' => 0,
+                        'show_cat_code' => 0
                     ]);
 
         //create default barcode setting for new business
