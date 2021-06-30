@@ -1,6 +1,7 @@
 <?php
  return [
 "sale" => "Vender",
+"vet" => "Veterinaria",
 "sells" => "Ventas",
 "list_sale" => "Lista de ventas",
 "add_sale" => "Agregar venta",

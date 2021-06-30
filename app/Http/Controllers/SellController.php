@@ -259,6 +259,10 @@ class SellController extends Controller
                 $sells->addSelect('transactions.is_recurring', 'transactions.recur_parent_id');
             }
 
+            $sells->with('mascota')
+            ->leftJoin('mascota','transactions.mascota_id','=','mascota.id')
+            ->addSelect('transactions.mascota_id','mascota.nombre AS mascota_nombre');
+
             $datatable = Datatables::of($sells)
                 ->addColumn(
                     'action',

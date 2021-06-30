@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
-
+use Modules\Superadmin\Entities\Subscription;
 class BusinessController extends Controller
 {
     /*
@@ -309,7 +309,15 @@ class BusinessController extends Controller
 
         $sms_settings = empty($business->sms_settings) ? $this->businessUtil->defaultSmsSettings() : $business->sms_settings;
 
-        $modules = $this->moduleUtil->availableModules();
+       
+        $package = Subscription::active_subscription_package($business_id);
+        
+        if($package[0]->is_active_vet == 1){
+            $modules = $this->moduleUtil->availableModulesVet();            
+        }else{
+            $modules = $this->moduleUtil->availableModules();
+        }
+        
 
         $theme_colors = $this->theme_colors;
 
@@ -343,7 +351,7 @@ class BusinessController extends Controller
             if (!empty($notAllowed)) {
                 return $notAllowed;
             }
-        
+            
             $business_details = $request->only(['name', 'start_date', 'currency_id', 'tax_label_1', 'tax_number_1', 'tax_label_2', 'tax_number_2', 'default_profit_percent', 'default_sales_tax', 'default_sales_discount', 'sell_price_tax', 'sku_prefix', 'time_zone', 'fy_start_month', 'accounting_method', 'transaction_edit_days', 'sales_cmsn_agnt', 'item_addition_method', 'currency_symbol_placement', 'on_product_expiry',
                 'stop_selling_before', 'default_unit', 'expiry_type', 'date_format',
                 'time_format', 'ref_no_prefixes', 'theme_color', 'email_settings',

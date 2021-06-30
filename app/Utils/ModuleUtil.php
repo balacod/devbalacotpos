@@ -10,7 +10,7 @@ use App\System;
 use App\Transaction;
 use App\User;
 use Composer\Semver\Comparator;
-
+use Modules\Superadmin\Entities\Subscription;
 class ModuleUtil extends Util
 {
     /**
@@ -472,6 +472,7 @@ class ModuleUtil extends Util
 
     public function availableModules()
     {
+        
         return [
             'purchases' => ['name' => __('purchase.purchases')],
             'add_sale' => ['name' => __('sale.add_sale')],
@@ -495,6 +496,36 @@ class ModuleUtil extends Util
                 'name' => __('restaurant.kitchen_for_restaurant')
             ],
             'subscription' => ['name' => __('lang_v1.enable_subscription')],
+            'types_of_service' => ['name' => __('lang_v1.types_of_service'),
+                        'tooltip' => __('lang_v1.types_of_service_help_long')
+                    ]
+        ];
+    }
+    public function availableModulesVet(){
+        return [
+            'purchases' => ['name' => __('purchase.purchases')],
+            'add_sale' => ['name' => __('sale.add_sale')],
+            'pos_sale' => ['name' => __('sale.pos_sale')],
+            'stock_transfers' => ['name' => __('lang_v1.stock_transfers')],
+            'stock_adjustment' => ['name' => __('stock_adjustment.stock_adjustment')],
+            'expenses' => ['name' => __('expense.expenses')],
+            'account' => ['name' => __('lang_v1.account')],
+            'tables' => [ 'name' => __('restaurant.tables'),
+                        'tooltip' => __('restaurant.tooltip_tables')
+                    ] ,
+            'modifiers' => [ 'name' => __('restaurant.modifiers'),
+                    'tooltip' => __('restaurant.tooltip_modifiers')
+                ],
+            'service_staff' => [
+                    'name' => __('restaurant.service_staff'),
+                    'tooltip' => __('restaurant.tooltip_service_staff')
+                ],
+            'booking' => ['name' => __('lang_v1.enable_booking')],
+            'kitchen' => [
+                'name' => __('restaurant.kitchen_for_restaurant')
+            ],
+            'subscription' => ['name' => __('lang_v1.enable_subscription')],
+            'vet' => ['name' => __('lang_v1.enable_vet')],
             'types_of_service' => ['name' => __('lang_v1.types_of_service'),
                         'tooltip' => __('lang_v1.types_of_service_help_long')
                     ]

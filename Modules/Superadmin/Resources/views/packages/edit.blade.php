@@ -193,6 +193,15 @@
 					@show_tooltip(__('superadmin::lang.update_existing_subscriptions_tooltip'))
 					</div>
 				</div>
+				<div class="col-sm-4">
+					<div class="checkbox">
+					<label>
+                        {!! Form::checkbox('is_active_vet', 1, $packages->is_active_vet, ['class' => 'input-icheck']); !!}
+                        {{__('superadmin::lang.update_existing_subscriptions_vet')}}
+					</label>
+					@show_tooltip(__('superadmin::lang.update_existing_subscriptions_vet_tooltip'))
+					</div>
+				</div>
 			</div>
 
 			<div class="row">

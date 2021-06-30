@@ -193,6 +193,7 @@ class ContactUtil extends Util
     {
         $query = Contact::leftjoin('transactions AS t', 'contacts.id', '=', 't.contact_id')
                     ->leftjoin('customer_groups AS cg', 'contacts.customer_group_id', '=', 'cg.id')
+                    ->leftjoin('business AS bss', 'bss.id', '=', 'contacts.business_id')
                     ->where('contacts.business_id', $business_id);
 
         if ($type == 'supplier') {
@@ -207,6 +208,7 @@ class ContactUtil extends Util
         $query->select([
             'contacts.*', 
             'cg.name as customer_group',
+            'bss.enabled_modules',
             DB::raw("SUM(IF(t.type = 'opening_balance', final_total, 0)) as opening_balance"),
             DB::raw("SUM(IF(t.type = 'opening_balance', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as opening_balance_paid")
         ]);
