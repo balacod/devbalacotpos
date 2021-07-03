@@ -267,7 +267,6 @@ class BusinessController extends Controller
         if (!auth()->user()->can('business_settings.access')) {
             abort(403, 'Unauthorized action.');
         }
-
         $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
         $timezone_list = [];
         foreach ($timezones as $timezone) {
@@ -311,6 +310,7 @@ class BusinessController extends Controller
 
        
         $package = Subscription::active_subscription_package($business_id);
+
 	if(isset($package[0]->is_active_vet)){        
 	        if($package[0]->is_active_vet == 1){
 	            $modules = $this->moduleUtil->availableModulesVet();            

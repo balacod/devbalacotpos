@@ -722,6 +722,7 @@ return [
 "earned" => "Ganado",
 "total_reward_amount" => "Recompensa total al cliente",
 "ledger" => "Libro mayor",
+"vet" => "Veterinaria",
 "type" => "Tipo",
 "show_payments" => "Mostrar pagos",
 "variation_images" => "Imágenes de variación",

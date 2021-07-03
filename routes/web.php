@@ -69,13 +69,15 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/contacts/customers', 'ContactController@getCustomers');
     Route::resource('contacts', 'ContactController');
 
-    //veterinaria
-    // Route::post('vet/store', 'VetController@store');
+    //veterinari
     Route::get('vet/list', 'VetController@lista');
     Route::get('vet/lista-consulta', 'VetController@listaConsultas');
+    Route::get('vet/lista-linea', 'VetController@listaConsultasAlta');
     Route::get('vet/consultas/{id}', 'VetController@consultas');
     Route::post('vet/consulta', 'VetController@consulta');
+    Route::post('vet/alta', 'VetController@alta');
     Route::get('vet/hojavida/{id}', 'VetController@hojavida');
+    Route::get('vet/hojaconsulta/{id}', 'VetController@hojaconsulta');
     Route::resource('vet', 'VetController');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');

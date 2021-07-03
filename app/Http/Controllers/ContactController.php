@@ -9,6 +9,7 @@ use App\CustomerGroup;
 use App\Notifications\CustomerNotification;
 use App\PurchaseLine;
 use App\Transaction;
+use App\Mascota;
 use App\User;
 use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;
@@ -726,6 +727,7 @@ class ContactController extends Controller
                 ->leftjoin('customer_groups as cg', 'cg.id', '=', 'contacts.customer_group_id')
                 ->active();
 
+
             $selected_contacts = User::isSelectedContacts($user_id);
             if ($selected_contacts) {
                 $contacts->join('user_contact_access AS uca', 'contacts.id', 'uca.contact_id')
@@ -740,6 +742,7 @@ class ContactController extends Controller
                             ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
                 });
             }
+            
 
             $contacts->select(
                 'contacts.id',
@@ -758,16 +761,22 @@ class ContactController extends Controller
                 'supplier_business_name',
                 'cg.amount as discount_percent',
                 'cg.price_calculation_type',
+
                 'cg.selling_price_group_id'
             )
             ->onlyCustomers();
+
 
             if (request()->session()->get('business.enable_rp') == 1) {
                 $contacts->addSelect('total_rp');
             }
 
             $contacts = $contacts->get();
-            
+
+            foreach($contacts as $key => $value){
+                    $mascotas = Mascota::where('cliente_id', $contacts[$key]->id)->where('status',1)->get();
+                    $contacts[$key]['mascotas']  = $mascotas;
+            }            
             return json_encode($contacts);
         }
     }
