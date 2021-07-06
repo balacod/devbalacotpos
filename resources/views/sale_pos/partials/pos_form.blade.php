@@ -225,3 +225,7 @@
         </table>
     </div>
 </div>
+
+<script type="text/javascript">
+    var edit_mascota_activa = null;
+</script>
