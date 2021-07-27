@@ -139,8 +139,7 @@ class PackagesController extends BaseController
      */
     public function edit($id)
     {
-        $packages = Package::where('id', $id)
-                            ->first();
+        $packages = Package::where('id', $id)->first();
         
         $intervals = ['days' => __('lang_v1.days'), 'months' => __('lang_v1.months'), 'years' => __('lang_v1.years')];
 
@@ -162,10 +161,11 @@ class PackagesController extends BaseController
         }
 
         try {
-            $packages_details = $request->only(['name', 'id', 'description', 'location_count', 'user_count', 'product_count', 'invoice_count', 'interval', 'interval_count', 'trial_days', 'price', 'sort_order', 'is_active', 'is_active_vet', 'custom_permissions', 'is_private', 'is_one_time', 'enable_custom_link', 'custom_link', 'custom_link_text']);
+            $packages_details = $request->only(['name', 'id', 'description', 'location_count', 'user_count', 'product_count', 'invoice_count', 'interval', 'interval_count', 'trial_days', 'price', 'sort_order', 'is_active', 'is_active_vet','is_active_invoice', 'custom_permissions', 'is_private', 'is_one_time', 'enable_custom_link', 'custom_link', 'custom_link_text']);
             
             $packages_details['is_active'] = empty($packages_details['is_active']) ? 0 : 1;
             $packages_details['is_active_vet'] = empty($packages_details['is_active_vet']) ? 0 : 1;
+            $packages_details['is_active_invoice'] = empty($packages_details['is_active_invoice']) ? 0 : 1;
             $packages_details['custom_permissions'] = empty($packages_details['custom_permissions']) ? null : $packages_details['custom_permissions'];
 
             $packages_details['is_private'] = empty($packages_details['is_private']) ? 0 : 1;
@@ -174,8 +174,7 @@ class PackagesController extends BaseController
             $packages_details['custom_link'] = empty($packages_details['enable_custom_link']) ? '' : $packages_details['custom_link'];
             $packages_details['custom_link_text'] = empty($packages_details['enable_custom_link']) ? '' : $packages_details['custom_link_text'];
 
-            $package = Package::where('id', $id)
-                            ->first();
+            $package = Package::where('id', $id)->first();
             $package->fill($packages_details);
             $package->save();
 

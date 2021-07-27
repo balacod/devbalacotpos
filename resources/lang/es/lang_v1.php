@@ -590,6 +590,7 @@ return [
 "subscription_interval" => "Intervalo de suscripción",
 "enable_subscription" => "Habilitar suscripción",
 "enable_vet" => "Habilitar Veterinaria",
+"enable_invoice" => "Habilitar Facturación",
 "subscription_no" => "Habilitar suscripción",
 "start_subscription" => "Iniciar suscripción",
 "stop_subscription" => "Detener suscripción",

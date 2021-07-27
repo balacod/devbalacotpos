@@ -310,17 +310,20 @@ class BusinessController extends Controller
 
        
         $package = Subscription::active_subscription_package($business_id);
+        
+        $modules = $this->moduleUtil->availableModules();
 
-	if(isset($package[0]->is_active_vet)){        
-	        if($package[0]->is_active_vet == 1){
-	            $modules = $this->moduleUtil->availableModulesVet();            
-        	}else{
-	            $modules = $this->moduleUtil->availableModules();
-        	}
-        }else{
-		$modules = $this->moduleUtil->availableModules();
-	}
-
+    	if(isset($package[0]->is_active_vet)){        
+    	    if($package[0]->is_active_vet == 0){
+                unset($modules['vet']);    	    
+           	}
+        }
+        if(isset($package[0]->is_active_invoice)){        
+            if($package[0]->is_active_invoice == 0){
+                unset($modules['incoive']);         
+            }
+        }
+        
         $theme_colors = $this->theme_colors;
 
         $mail_drivers = $this->mailDrivers;

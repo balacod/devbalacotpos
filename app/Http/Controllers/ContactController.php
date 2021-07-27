@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\TransactionPayment;
 use Spatie\Activitylog\Models\Activity;
+use Modules\Superadmin\Entities\Subscription;
 
 class ContactController extends Controller
 {
@@ -255,7 +256,6 @@ class ContactController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
-
         $query = $this->contactUtil->getContactQuery($business_id, 'customer');
 
         $contacts = Datatables::of($query)
@@ -271,7 +271,7 @@ class ContactController extends Controller
             ->addColumn(
                 'action',
                 function ($row) {
-
+                    
                     $html = '<div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
                         data-toggle="dropdown" aria-expanded="false">' .
@@ -343,17 +343,24 @@ class ContactController extends Controller
                             </li>';
                         }
 
-                        $modules = json_decode($row->enabled_modules);
-                        foreach ($modules as $value) {
-                            if ("vet" == $value) {
-                                $html .=  '<li>
-                                    <a href="' . action('ContactController@show', [$row->id]). '?view=vet">
-                                        <i class="fas fa-arrow-circle-up" aria-hidden="true"></i>
-                                        ' . __("sale.vet") . '
-                                    </a>
-                                </li>';
-                            }    
+                        if(isset($row->is_active_vet)){        
+                            if($row->is_active_vet == 1){
+
+                                $modules = json_decode($row->enabled_modules);
+                                foreach ($modules as $value) {
+                                    if ("vet" == $value) {
+                                        $html .=  '<li>
+                                            <a href="' . action('ContactController@show', [$row->id]). '?view=vet">
+                                                <i class="fas fa-arrow-circle-up" aria-hidden="true"></i>
+                                                ' . __("sale.vet") . '
+                                            </a>
+                                        </li>';
+                                    }    
+                                }  
+                            }
                         }
+
+                        
 
                         $html .= '<li>
                                 <a href="' . action('ContactController@show', [$row->id]) . '?view=documents_and_notes">

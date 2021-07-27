@@ -193,6 +193,8 @@ class ContactUtil extends Util
     {
         $query = Contact::leftjoin('transactions AS t', 'contacts.id', '=', 't.contact_id')
                     ->leftjoin('customer_groups AS cg', 'contacts.customer_group_id', '=', 'cg.id')
+                    ->join('subscriptions', 'subscriptions.business_id','=','contacts.business_id')
+                    ->join('packages', 'packages.id','=','subscriptions.package_id')                
                     ->leftjoin('business AS bss', 'bss.id', '=', 'contacts.business_id')
                     ->where('contacts.business_id', $business_id);
 
@@ -206,6 +208,7 @@ class ContactUtil extends Util
         }
 
         $query->select([
+            'packages.is_active_vet','packages.is_active_invoice', 
             'contacts.*', 
             'cg.name as customer_group',
             'bss.enabled_modules',

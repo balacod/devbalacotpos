@@ -89,7 +89,7 @@ class Subscription extends Model
         $date_today = \Carbon::today()->toDateString();
         
         $subscription = DB::table('subscriptions')
-                            ->select('packages.is_active_vet')
+                            ->select('packages.is_active_vet','packages.is_active_invoice')
                             ->join('packages', 'packages.id','=','subscriptions.package_id')
                             ->where('business_id', $business_id)
                             ->whereDate('start_date', '<=', $date_today)
