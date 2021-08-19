@@ -360,6 +360,23 @@ class ContactController extends Controller
                             }
                         }
 
+                        if(isset($row->is_active_parka)){        
+                            if($row->is_active_parka == 1){
+
+                                $modules = json_decode($row->enabled_modules);
+                                foreach ($modules as $value) {
+                                    if ("parka" == $value) {
+                                        $html .=  '<li>
+                                            <a href="' . action('ContactController@show', [$row->id]). '?view=park">
+                                                <i class="fas fa-arrow-circle-up" aria-hidden="true"></i>
+                                                ' . __("sale.park") . '
+                                            </a>
+                                        </li>';
+                                    }    
+                                }  
+                            }
+                        }
+
                         
 
                         $html .= '<li>
@@ -563,9 +580,21 @@ class ContactController extends Controller
            ->with(['causer', 'subject'])
            ->latest()
            ->get();
+        $flagVet = false;
+        $flagPark = false;
+
+        $moduleActive = $this->contactUtil->getIsActiveModules($business_id);
         
+        if($moduleActive != null){
+            if($moduleActive[0]->is_active_parka){
+                $flagPark = true;
+            }
+            if($moduleActive[0]->is_active_vet){
+                $flagVet = true;
+            }
+        }
         return view('contact.show')
-             ->with(compact('contact', 'reward_enabled', 'contact_dropdown', 'business_locations', 'view_type', 'contact_view_tabs', 'activities'));
+             ->with(compact('flagPark','flagVet','contact', 'reward_enabled', 'contact_dropdown', 'business_locations', 'view_type', 'contact_view_tabs', 'activities'));
     }
 
     /**

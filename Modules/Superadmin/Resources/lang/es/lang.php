@@ -153,6 +153,9 @@ return [
 "update_existing_subscriptions_vet_tooltip" => "Esto habilita su suscripción al Modulo de Veterinaria",
 "update_existing_subscriptions_invoice" => "Habilitar Facturación",
 "update_existing_subscriptions_invoice_tooltip" => "Esto habilita su suscripción al Modulo de Facturación",
+"update_existing_subscriptions_parka" => "Habilitar Parcadero",
+"update_existing_subscriptions_parka_tooltip" => "Esto habilita su suscripción al Modulo de Parcadero",
+
 "frontend_pages" => "Páginas frontend",
 "page_title" => "Título de la página",
 "slug" => "Babosa",

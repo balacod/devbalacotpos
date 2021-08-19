@@ -143,6 +143,7 @@
         <div class="modal fade types_of_service_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"></div>
     @endif
 
+    @if($flagVent)
     <div class="col-md-6 col-sm-8">
         <div class="form-group">
             <div class="input-group">
@@ -153,6 +154,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     @if(!empty($pos_settings['show_invoice_scheme']))
         <div class="col-md-4 col-sm-6">

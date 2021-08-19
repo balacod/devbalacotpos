@@ -58,7 +58,8 @@ class VetController extends Controller{
         $this->notificationUtil = $notificationUtil;
     }
     public function index(){
-
+        
+       
     }
 
      /**

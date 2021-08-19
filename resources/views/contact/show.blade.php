@@ -59,6 +59,7 @@
             <div class="col-md-12">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs nav-justified">
+                        @if($flagVet)
                         <li class="
                                 @if(!empty($view_type) &&  $view_type == 'vet')
                                     active
@@ -67,6 +68,12 @@
                                 @endif">
                             <a href="#ledger_vet" data-toggle="tab" aria-expanded="true"><i class="fas fa-cat" aria-hidden="true"></i> @lang('lang_v1.vet')</a>
                         </li>
+                        @endif
+                        @if($flagPark)
+                        <li class="@if(!empty($view_type) &&  $view_type == 'park') active @else '' @endif">
+                            <a href="#ledger_parka" data-toggle="tab" aria-expanded="true"><i class="fas fa-car" aria-hidden="true"></i> @lang('lang_v1.parka')</a>
+                        </li>
+                        @endif
 
                         <li class="
                                 @if(!empty($view_type) &&  $view_type == 'ledger')
@@ -76,7 +83,6 @@
                                 @endif">
                             <a href="#ledger_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-scroll" aria-hidden="true"></i> @lang('lang_v1.ledger')</a>
                         </li>
-
                         @if(in_array($contact->type, ['both', 'supplier']))
                             <li class="
                                 @if(!empty($view_type) &&  $view_type == 'purchase')
@@ -115,7 +121,6 @@
                                 </li>
                             @endif
                         @endif
-
                         <li class="
                                 @if(!empty($view_type) &&  $view_type == 'documents_and_notes')
                                     active
@@ -133,7 +138,6 @@
                                 @endif">
                             <a href="#payments_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-money-bill-alt" aria-hidden="true"></i> @lang('sale.payments')</a>
                         </li>
-
                         @if( in_array($contact->type, ['customer', 'both']) && session('business.enable_rp'))
                             <li class="
                                 @if(!empty($view_type) &&  $view_type == 'reward_point')
@@ -144,7 +148,6 @@
                                 <a href="#reward_point_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-gift" aria-hidden="true"></i> {{ session('business.rp_name') ?? __( 'lang_v1.reward_points')}}</a>
                             </li>
                         @endif
-
                         <li class="
                             @if(!empty($view_type) &&  $view_type == 'activities')
                                 active
@@ -153,7 +156,6 @@
                             @endif">
                             <a href="#activities_tab" data-toggle="tab" aria-expanded="true"><i class="fas fa-pen-square" aria-hidden="true"></i> @lang('lang_v1.activities')</a>
                             </li>
-
                         @if(!empty($contact_view_tabs))
                             @foreach($contact_view_tabs as $key => $tabs)
                                 @foreach ($tabs as $index => $value)
@@ -166,12 +168,11 @@
                                 @endforeach
                             @endforeach
                         @endif
-
                     </ul>
-
                     <div class="tab-content">
 
-                        
+                        <!-- MODULO DE VETERINARIA -->
+                        @if($flagVet)
                         <div class="tab-pane
                                     @if(!empty($view_type) &&  $view_type == 'vet')
                                         active
@@ -202,6 +203,13 @@
                                 </tbody>
                            </table>
                         </div>
+                        @endif
+                        @if($flagPark)
+                        <div class="tab-pane @if(!empty($view_type) &&  $view_type == 'park') active @else '' @endif" id="ledger_parka">
+                            <br>
+                            <h3>Aparcadero</h3> 
+                        </div>
+                        @endif
                         <div class="tab-pane
                                     @if(!empty($view_type) &&  $view_type == 'ledger')
                                         active
@@ -211,6 +219,7 @@
                                 id="ledger_tab">
                             @include('contact.partials.ledger_tab')
                         </div>
+
                         @if(in_array($contact->type, ['both', 'supplier']))
                             <div class="tab-pane
                                 @if(!empty($view_type) &&  $view_type == 'purchase')
@@ -358,7 +367,7 @@
             <form id="formMascota" method="post">
             <input type="hidden" name="idcliente" value="{{$contact->id}}">
             <input type="hidden" name="idmas" id="idmas">
-            <div class="modal-body" style="background: #ffffff;height: 320px !important;">
+            <div class="modal-body" style="background: #ffffff;height: 330px !important;">
 
                 <div class="row" >
                     <div class="col-xs-6 col-md-4">
@@ -402,24 +411,25 @@
                 
                 </div>
                 <div class="row" >
-                    <div class="col-xs-6 col-md-3">
+                    <div class="col-xs-6 col-md-4">
                         <label>Alergico a</label>
                         <input type="text" name="alergico" id="alergico" class="form-control">
                     </div>
-                    <div class="col-xs-6 col-md-3">
+                    <div class="col-xs-6 col-md-4">
                         <label>Ojos</label>
                         <input type="text" name="ojos" id="ojos" class="form-control">
                     </div>
-                    <div class="col-xs-6 col-md-3">
+                    <div class="col-xs-6 col-md-4">
                         <label>Oidos</label>
                         <input type="text" name="oidos" id="oidos" class="form-control">
                     </div>
-                    <div class="col-xs-6 col-md-3">
+                    
+                </div>
+                <div class="row" >
+                    <div class="col-xs-6 col-md-4">
                         <label>Piel</label>
                         <input type="text" name="piel" id="piel" class="form-control">
                     </div>                    
-                </div>
-                <div class="row" >
                     <div class="col-xs-6 col-md-4">
                         <label>Pulgas y/o Garrapatas</label>
                         <input type="text" name="pulgas_garrapatas" id="pulgas_garrapatas" class="form-control">
@@ -428,6 +438,8 @@
                         <label>Nombre collar</label>
                         <input type="text" name="collar_nombre" id="collar_nombre" class="form-control">
                     </div>
+                </div>
+                <div class="row" >
                     <div class="col-xs-6 col-md-4 checkbox">
                         <label class="checkbox-inline"><input type="checkbox" id="desparacitado" name="desparacitado" name="desparacitado" >Desparacitado</label>
                         <label class="checkbox-inline"><input type="checkbox" id="agresivo" name="agresivo" name="agresivo" >Agresivo</label>
@@ -435,7 +447,7 @@
                     </div>
                 </div>
             
-                <br>
+                <!-- <br> -->
                 <div class="row" >
                     <div class="col-xs-6 col-md-8">
                     </div>
@@ -444,6 +456,12 @@
                         <button class="btn btn-danger" type="button" onclick="cancelarAltaMascota()">Cancelar</button>
                     </div>
                 </div>
+                <div class="row" >
+                    <div class="col-xs-6 col-md-8">
+                        <br>
+                    </div>
+                </div>
+                <br>
             </div>
             </form>
         </div>

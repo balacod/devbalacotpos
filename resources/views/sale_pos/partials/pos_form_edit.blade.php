@@ -129,7 +129,8 @@
 			@endif
 		</div>
 	@endif
-
+    @if($flagVent)
+	
     <div class="col-md-6 col-sm-8">
         <div class="form-group">
             <div class="input-group">
@@ -140,6 +141,7 @@
             </div>
         </div>
     </div>
+	@endif
 
 	@if($transaction->status == 'draft' && !empty($pos_settings['show_invoice_scheme']))
 		<div class="col-sm-3">

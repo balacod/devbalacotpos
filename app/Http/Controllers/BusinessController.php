@@ -9,6 +9,12 @@ use App\System;
 use App\TaxRate;
 use App\Unit;
 use App\User;
+use App\TypeDocument;
+use App\Department;
+use App\TypeOrganization;
+use App\TypeRegime;
+use App\Municipalitie;
+use App\InvoiceBusiness;
 use App\Utils\BusinessUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\RestaurantUtil;
@@ -268,6 +274,7 @@ class BusinessController extends Controller
             abort(403, 'Unauthorized action.');
         }
         $timezones = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+
         $timezone_list = [];
         foreach ($timezones as $timezone) {
             $timezone_list[$timezone] = $timezone;
@@ -275,7 +282,16 @@ class BusinessController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $business = Business::where('id', $business_id)->first();
-        
+        $documenteType = TypeDocument::all();
+        $department = Department::all();
+        $typeOrganization = TypeOrganization::all();
+        $typeRegime = TypeRegime::all();
+        $municipalities = Municipalitie::all();
+        $invoiceBusiness = InvoiceBusiness::where('business_id', $business_id)->first();
+        if($invoiceBusiness == null){
+            $invoiceBusiness = new InvoiceBusiness;
+        }
+        // dd($invoiceBusiness->id);
         $currencies = $this->businessUtil->allCurrencies();
         $tax_details = TaxRate::forBusinessDropdown($business_id);
         $tax_rates = $tax_details['tax_rates'];
@@ -286,41 +302,36 @@ class BusinessController extends Controller
         }
 
         $accounting_methods = [
-                'fifo' => __('business.fifo'),
-                'lifo' => __('business.lifo')
-            ];
+            'fifo' => __('business.fifo'),
+            'lifo' => __('business.lifo')
+        ];
         $commission_agent_dropdown = [
-                '' => __('lang_v1.disable'),
-                'logged_in_user' => __('lang_v1.logged_in_user'),
-                'user' => __('lang_v1.select_from_users_list'),
-                'cmsn_agnt' => __('lang_v1.select_from_commisssion_agents_list')
-            ];
-
+            '' => __('lang_v1.disable'),
+            'logged_in_user' => __('lang_v1.logged_in_user'),
+            'user' => __('lang_v1.select_from_users_list'),
+            'cmsn_agnt' => __('lang_v1.select_from_commisssion_agents_list')
+        ];
         $units_dropdown = Unit::forDropdown($business_id, true);
-
         $date_formats = Business::date_formats();
-
-        $shortcuts = json_decode($business->keyboard_shortcuts, true);
-        
+        $shortcuts = json_decode($business->keyboard_shortcuts, true);        
         $pos_settings = empty($business->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business->pos_settings, true);
-
         $email_settings = empty($business->email_settings) ? $this->businessUtil->defaultEmailSettings() : $business->email_settings;
-
         $sms_settings = empty($business->sms_settings) ? $this->businessUtil->defaultSmsSettings() : $business->sms_settings;
-
-       
-        $package = Subscription::active_subscription_package($business_id);
-        
+        $package = Subscription::active_subscription_package($business_id);        
         $modules = $this->moduleUtil->availableModules();
-
-    	if(isset($package[0]->is_active_vet)){        
+    	if(isset($package[0]->is_active_vet)){ 
     	    if($package[0]->is_active_vet == 0){
                 unset($modules['vet']);    	    
            	}
         }
-        if(isset($package[0]->is_active_invoice)){        
+        if(isset($package[0]->is_active_invoice)){ 
             if($package[0]->is_active_invoice == 0){
                 unset($modules['incoive']);         
+            }
+        }
+         if(isset($package[0]->is_active_parka)){ 
+            if($package[0]->is_active_parka == 0){
+                unset($modules['parka']);         
             }
         }
         
@@ -336,7 +347,7 @@ class BusinessController extends Controller
 
         $weighing_scale_setting = !empty($business->weighing_scale_setting) ? $business->weighing_scale_setting : [];
 
-        return view('business.settings', compact('business', 'currencies', 'tax_rates', 'timezone_list', 'months', 'accounting_methods', 'commission_agent_dropdown', 'units_dropdown', 'date_formats', 'shortcuts', 'pos_settings', 'modules', 'theme_colors', 'email_settings', 'sms_settings', 'mail_drivers', 'allow_superadmin_email_settings', 'custom_labels', 'common_settings', 'weighing_scale_setting'));
+        return view('business.settings', compact('invoiceBusiness','municipalities','documenteType','typeRegime','department','typeOrganization','business', 'currencies', 'tax_rates', 'timezone_list', 'months', 'accounting_methods', 'commission_agent_dropdown', 'units_dropdown', 'date_formats', 'shortcuts', 'pos_settings', 'modules', 'theme_colors', 'email_settings', 'sms_settings', 'mail_drivers', 'allow_superadmin_email_settings', 'custom_labels', 'common_settings', 'weighing_scale_setting'));
     }
 
     /**
@@ -486,8 +497,126 @@ class BusinessController extends Controller
                         ];
         }
         return redirect('business/settings')->with('status', $output);
-    }
+    }    
+    public function saveCompanyInvoice(Request $request){
 
+        if (!auth()->user()->can('business_settings.access')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        
+        try {
+
+            $notAllowed = $this->businessUtil->notAllowedInDemo();
+            if (!empty($notAllowed)) {
+                return $notAllowed;
+            }
+
+            $business_details = $request->all();
+            
+            $business_id = request()->session()->get('user.business_id');
+            
+            $input = array(
+                "business_id" => $business_id,
+                "identificacion" => (int) $business_details['identificacion'],
+                "dv" => (int) $business_details['dv'],
+                "registromercantil" => $business_details['registro_mercantil'],
+                "direccion" => $business_details['direccion'],
+                "telefono" => (int) $business_details['telefono'],
+                "tipo_documentacion" => (int) $business_details['tipo_documento'],
+                "departamento" => (int) $business_details['departamento'],
+                "municipio" => (int) $business_details['municipio'],
+                "organizacion" => (int) $business_details['organizacion'],
+                "regimen" => (int) $business_details['regimen'],
+                "status_api" => 0
+            );
+            
+            $invoiceBusiness = InvoiceBusiness::where('business_id', $business_id)->first();
+
+            if($invoiceBusiness == null){               
+                $response = InvoiceBusiness::create($input);
+                $invoiceBusiness = InvoiceBusiness::where('business_id', $business_id)->first();
+            }else{                                
+                $response = $invoiceBusiness->update($input);
+                
+            }
+            $business = Business::find($business_id);
+
+            // dd($invoiceBusiness->tipo_documentacion);
+
+            $data =  array(
+                "type_document_identification_id" => $invoiceBusiness->tipo_documentacion,
+                "type_organization_id" => $invoiceBusiness->organizacion,
+                "type_regime_id" => $invoiceBusiness->regimen,
+                "type_liability_id" => 14,
+                "business_name" => $business->name,
+                "merchant_registration"=> "0000000-00",
+                "municipality_id"=> $invoiceBusiness->municipio,
+                "address"=> $invoiceBusiness->direccion,
+                "phone"=> $invoiceBusiness->telefono,
+                "email"=> $invoiceBusiness->email
+            );
+            // dd(json_encode($data));
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => 'https://dian.balacotpos.com//api/ubl2.1/config/'.$invoiceBusiness->identificacion.'/'.$invoiceBusiness->dv,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'POST',
+              CURLOPT_POSTFIELDS =>json_encode($data),
+              CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Bearer 7692a20fec92af0aa5729d796b019d27c83c9955407994630a0cdd7702ca2329'
+              ),
+            ));
+
+            $response = curl_exec($curl);
+
+            $err = curl_error($curl);
+            curl_close($curl);
+
+            if ($err) {
+                // echo "cURL Error #:" . $err;
+                $output = [
+                    'success' => 0,
+                    'msg' => $err
+                ];
+            } else {
+                
+                $respuestaApi = json_decode($response);
+                
+                $reesst = array(
+                    "token_api" => $respuestaApi->token,
+                    "status_api" => 1
+                );
+                                 
+                $responseapi = $invoiceBusiness->update($reesst);
+
+                $output = [
+                    'success' => 1,
+                    'msg' => $respuestaApi->message
+                ];
+
+                return $output;
+            }
+
+        } catch (\Exception $e) {
+            // \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+        
+            $output = ['success' => 0,
+                'msg' => "proceso no completado, intente de nuevo"
+            ];
+             return $output;
+        }
+        // return redirect('business/settings')->with('status', $output);
+
+    }
     /**
      * Handles the validation email
      *
@@ -602,5 +731,13 @@ class BusinessController extends Controller
         }
 
         return $output;
+    }
+
+    public function municipio(Request $request){
+        $id = $request->input('id');
+        $municipio =  DB::table('municipalities as m')->select('m.*')->where('m.department_id',$id)->join('departments as d','d.id','=','m.department_id')->orderby('m.name','ASC')->get();
+        
+        return $municipio;
+
     }
 }

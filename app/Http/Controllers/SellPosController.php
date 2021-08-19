@@ -57,6 +57,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 use App\InvoiceScheme;
+use Modules\Superadmin\Entities\Subscription;
 
 class SellPosController extends Controller
 {
@@ -244,8 +245,10 @@ class SellPosController extends Controller
         $invoice_schemes = InvoiceScheme::forDropdown($business_id);
         $default_invoice_schemes = InvoiceScheme::getDefault($business_id);
 
+        $flagVent = $this->contactUtil->getIsVetActive($business_id);
         return view('sale_pos.create')
             ->with(compact(
+                'flagVent',
                 'business_locations',
                 'bl_attributes',
                 'business_details',
@@ -965,9 +968,9 @@ class SellPosController extends Controller
         }
 
         $invoice_layouts = InvoiceLayout::forDropdown($business_id);
-
+        $flagVent = $this->contactUtil->getIsVetActive($business_id);
         return view('sale_pos.edit')
-            ->with(compact('business_details', 'taxes', 'payment_types', 'walk_in_customer', 'sell_details', 'transaction', 'payment_lines', 'location_printer_type', 'shortcuts', 'commission_agent', 'categories', 'pos_settings', 'change_return', 'types', 'customer_groups', 'brands', 'accounts', 'waiters', 'redeem_details', 'edit_price', 'edit_discount', 'shipping_statuses', 'warranties', 'sub_type', 'pos_module_data', 'invoice_schemes', 'default_invoice_schemes', 'invoice_layouts', 'featured_products'));
+            ->with(compact('flagVent','business_details', 'taxes', 'payment_types', 'walk_in_customer', 'sell_details', 'transaction', 'payment_lines', 'location_printer_type', 'shortcuts', 'commission_agent', 'categories', 'pos_settings', 'change_return', 'types', 'customer_groups', 'brands', 'accounts', 'waiters', 'redeem_details', 'edit_price', 'edit_discount', 'shipping_statuses', 'warranties', 'sub_type', 'pos_module_data', 'invoice_schemes', 'default_invoice_schemes', 'invoice_layouts', 'featured_products'));
     }
 
     /**

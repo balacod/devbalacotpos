@@ -498,6 +498,7 @@ class ModuleUtil extends Util
             'subscription' => ['name' => __('lang_v1.enable_subscription')],
             'vet' => ['name' => __('lang_v1.enable_vet')],
             'incoive' => ['name' => __('lang_v1.enable_invoice')],
+            'parka' => ['name' => __('lang_v1.enable_parka')],
             'types_of_service' => ['name' => __('lang_v1.types_of_service'),
                         'tooltip' => __('lang_v1.types_of_service_help_long')
                     ]

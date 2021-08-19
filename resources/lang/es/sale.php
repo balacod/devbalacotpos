@@ -2,6 +2,7 @@
  return [
 "sale" => "Vender",
 "vet" => "Veterinaria",
+"park" => "Aparcadero",
 "sells" => "Ventas",
 "list_sale" => "Lista de ventas",
 "add_sale" => "Agregar venta",
