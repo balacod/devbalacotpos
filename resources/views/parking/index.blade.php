@@ -188,6 +188,13 @@
 				}
 			]
 		});
+		
+		$('#btn-cancelar-estancia').on('click',function(){
+			$(this).hide();
+			editEstancia = false;
+			estanciaId = null;
+			$('#estancia-nombre').val(null);
+		});
 
 		$('#table-estancias tbody').on( 'click', 'tr td button[name=edit]', function () {
 			editEstancia = true;
@@ -264,6 +271,13 @@
 					}
 				}
 			]
+		});
+
+		$('#btn-cancelar-zona').on('click',function(){
+			$(this).hide();
+			editZona = false;
+			estanciaId = null;
+			$('#zona-nombre').val(null);
 		});
 
 		$('#table-zonas tbody').on( 'click', 'tr td button[name=edit]', function () {
@@ -424,6 +438,17 @@
 			]
 		});
 
+		$('#btn-cancelar-tarifa').on('click',function(){
+			$(this).hide();
+			editTarifa = false;
+			tarifaId = null;
+			selectVehiculo.val(null).trigger('change');
+			selectEstancia.val(null).trigger('change');
+			selectZona.val(null).trigger('change');
+			$('#valorHora').val(null);
+			$('#timeValorFranccion').val(null);
+		});
+
 		$('#table-tarifas tbody').on( 'click', 'tr td button[name=edit]', function () {
 			console.log('entra');
 			editTarifa = true;
@@ -461,6 +486,10 @@
 			});
 			$('#valorHora').val(tarifa.precio_hora);
 			$('#timeValorFranccion').val(tarifa.tiempo_gracias);
+
+			$('body,html').animate({
+				scrollTop:0
+			},200);
 
 			
 		});
@@ -652,7 +681,8 @@
 						required:true
 					},
 					tiempo_gracias: {
-						required:true
+						required:true,
+						min: 1
 					}
 				},
 				messages:{
@@ -669,7 +699,8 @@
 						required:'El precio por hora es requerido'
 					},
 					tiempo_gracias: {
-						required:'El tiempo de gracia es requerido'
+						required:'El tiempo de gracia es requerido',
+						min:'Solo números mayores o iguales a 1'
 					}
 				},
 				submitHandler:function(form){

@@ -22,7 +22,7 @@ class CreateTarifasTable extends Migration
             $table->unsignedInteger('estancia_id');
             $table->foreign('estancia_id')->references('id')->on('estancias');
             $table->float('precio_hora');
-            $table->time('tiempo_gracias');
+            $table->integer('tiempo_gracias');
             $table->timestamps();
         });
     }

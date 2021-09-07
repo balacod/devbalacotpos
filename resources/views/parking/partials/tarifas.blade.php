@@ -51,7 +51,7 @@
 	                <label>Tiempo maxímo de Franccion</label>
 	                <div class="input-group">
 	                    <span class="input-group-addon"><i class="fas fa-clock"></i></span>
-	                    <input type="time" name="tiempo_gracias" id="timeValorFranccion" class="form-control">
+	                    <input type="number" name="tiempo_gracias" min="1" id="timeValorFranccion" class="form-control">
 	                </div>
 	            </div>
 	        </div>
