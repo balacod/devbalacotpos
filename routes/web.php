@@ -56,8 +56,31 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     // Route::resource('payment-account', 'PaymentAccountController');
 
     Route::resource('/parking', 'ParkController');
+    // Route::resource('/parking/vehiculos','VehiculosController');
     Route::get('/parking/lista', 'ParkController@listaTarifa');
 
+    //vehiculos
+    Route::get('/parking/vehiculos/get-vehiculos','VehiculosController@index')->name('parking.vehiculos.index');
+    Route::post('/parking/vehiculos/store','VehiculosController@store')->name('parking.vehiculos.store');
+    Route::put('/parking/vehiculos/{vehiculo}/update','VehiculosController@update')->name('parking.vehiculos.update');
+    Route::delete('/parking/vehiculos/{vehiculo}/delete','VehiculosController@destroy')->name('parking.vehiculos.destroy');
+    
+    //Estancias
+    Route::get('/parking/estancias/get-estancias','EstanciaController@index')->name('parking.estancias.index');
+    Route::post('/parking/estancias/store','EstanciaController@store')->name('parking.estancias.store');
+    Route::put('/parking/estancias/{estancia}/update','EstanciaController@update')->name('parking.estancias.update');
+    Route::delete('/parking/estancias/{estancia}/delete','EstanciaController@destroy')->name('parking.estancias.destroy');
+    //Zonas
+    Route::get('/parking/zonas/get-zonas','ZonasController@index')->name('parking.zonas.index');
+    Route::post('/parking/zonas/store','ZonasController@store')->name('parking.zonas.store');
+    Route::put('/parking/zonas/{zona}/update','ZonasController@update')->name('parking.zonas.update');
+    Route::delete('/parking/zonas/{zona}/delete','ZonasController@destroy')->name('parking.zonas.destroy');
+    
+    //Tarifas
+    Route::get('/parking/tarifas/get-tarifas','TarifasController@index')->name('parking.tarifas.index');
+    Route::post('/parking/tarifas/store','TarifasController@store')->name('parking.tarifas.store');
+    Route::put('/parking/tarifas/{tarifa}/update','TarifasController@update')->name('parking.tarifas.update');
+    Route::delete('/parking/tarifas/{tarifa}/delete','TarifasController@destroy')->name('parking.tarifas.destroy');
 
     Route::resource('tax-rates', 'TaxRateController');
 
