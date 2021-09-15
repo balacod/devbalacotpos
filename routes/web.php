@@ -82,6 +82,13 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::put('/parking/tarifas/{tarifa}/update','TarifasController@update')->name('parking.tarifas.update');
     Route::delete('/parking/tarifas/{tarifa}/delete','TarifasController@destroy')->name('parking.tarifas.destroy');
 
+    //CONFIGURACIONES
+    Route::get('/parking/configuraciones/get-configuraciones','ConfiguracionController@index')->name('parking.configuraciones.index');
+    Route::post('/parking/configuraciones/store','ConfiguracionController@store')->name('parking.configuraciones.store');
+    Route::put('/parking/configuraciones/{configuracion}/update','ConfiguracionController@update')->name('parking.configuraciones.update');
+    Route::delete('/parking/configuraciones/{configuracion}/delete','ConfiguracionController@destroy')->name('parking.configuraciones.destroy');
+
+
     Route::resource('tax-rates', 'TaxRateController');
 
     Route::resource('units', 'UnitController');

@@ -8,5 +8,5 @@ class Estancia extends Model
 {
     //
 
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre','horas'];
 }

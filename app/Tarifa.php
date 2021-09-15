@@ -13,6 +13,7 @@ class Tarifa extends Model
         'zona_id',
         'estancia_id',
         'precio_hora',
+        'configuracion_id',
         'tiempo_gracias'
     ];
 
@@ -27,5 +28,9 @@ class Tarifa extends Model
 
     public function estancia(){
         return $this->belongsTo(Estancia::class,'estancia_id');
+    }
+
+    public function configuracion(){
+        return $this->belongsTo(ConfiguracionTiempo::class,'configuracion_id');
     }
 }

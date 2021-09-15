@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TarifasRequest;
-use App\Tarifa;
+use App\ConfiguracionTiempo;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Yajra\DataTables\Facades\DataTables;
 
-class TarifasController extends Controller
+class ConfiguracionController extends Controller
 {
+    //
+
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +20,11 @@ class TarifasController extends Controller
     public function index()
     {
         //
-        $tarifas = Tarifa::with(['vehiculo','zona','estancia','configuracion']);
-        return DataTables::eloquent($tarifas)
+
+        $configuraciones = ConfiguracionTiempo::query();
+        
+
+        return DataTables::eloquent($configuraciones)
         ->make(true);
     }
 
@@ -40,24 +44,21 @@ class TarifasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TarifasRequest $request)
+    public function store(Request $request)
     {
         //
         try{
+            ConfiguracionTiempo::create($request->all());
 
-            Tarifa::create($request->all());
             return Response::json([
                 'success' => true,
-                'msg' => 'Se ha agreadó con éxito'
+                'msg' => 'Se agregó correctamente'
             ]);
-            
-
         }catch(Exception $e){
             return Response::json([
                 'success' => false,
                 'msg' => 'Lo sentimos ha ocurrido un error'
             ]);
-
         }
     }
 
@@ -90,18 +91,15 @@ class TarifasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TarifasRequest $request, Tarifa $tarifa)
+    public function update(Request $request, ConfiguracionTiempo $configuracion)
     {
         //
-
         try{
-
-            $tarifa->update($request->all());
+            $configuracion->update($request->all());
             return Response::json([
                 'success' => true,
-                'msg' => 'Se ha editado con éxito'
+                'msg' => 'Se editó correctamente'
             ]);
-            
 
         }catch(Exception $e){
             return Response::json([
@@ -118,17 +116,16 @@ class TarifasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tarifa $tarifa)
+    public function destroy(ConfiguracionTiempo $configuracion)
     {
         //
         try{
+            $configuracion->delete();
 
-            $tarifa->delete();
             return Response::json([
                 'success' => true,
                 'msg' => 'Se ha eliminado con éxito'
             ]);
-            
 
         }catch(Exception $e){
             return Response::json([

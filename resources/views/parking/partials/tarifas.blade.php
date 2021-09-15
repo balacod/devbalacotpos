@@ -37,7 +37,7 @@
 	                </div>
 	            </div>
 	        </div>
-	        <div class="col-sm-4">
+	        {{-- <div class="col-sm-4">
 	            <div class="form-group">
 	                <label>Valor por hora</label>
 	                <div class="input-group">
@@ -45,16 +45,29 @@
 	                    <input type="number" name="precio_hora" id="valorHora" class="form-control">
 	                </div>
 	            </div>
-	        </div>
+	        </div> --}}
 	        <div class="col-sm-4">
 	            <div class="form-group">
-	                <label>Tiempo maxímo de Franccion</label>
+	                <label>Tiempo máximo de Gracia</label>
 	                <div class="input-group">
 	                    <span class="input-group-addon"><i class="fas fa-clock"></i></span>
 	                    <input type="number" name="tiempo_gracias" min="1" id="timeValorFranccion" class="form-control">
 	                </div>
 	            </div>
 	        </div>
+			<div class="col-sm-4">
+	            <div class="form-group">
+	                <label>Configuración</label>
+	                <div class="input-group">
+	                    <span class="input-group-addon"><i class="fas fa-map"></i></span>
+	                    <select class="form-control" name="configuracion_id" id="configuracion">
+	                    	
+	                    </select>
+	                </div>
+	            </div>
+	        </div>
+
+			
 	        
 	        {{-- <div class="col-sm-4">
 	            <div class="form-group">
@@ -86,6 +99,7 @@
                         <th>Tipo Vehiculo</th>
                         <th>Tipo Estancia</th>
 						<th>Zona</th>
+						<th>Configuracion</th>
                         <th>Valor por hora</th>
 						<th>Tiempo Fraccón</th>
                         {{-- <th>Valor Fracción</th> --}}

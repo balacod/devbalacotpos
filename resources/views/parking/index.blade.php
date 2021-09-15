@@ -21,6 +21,7 @@
 	                    <a href="#" class="list-group-item text-center">Zonas</a>
 	                    <a href="#" class="list-group-item text-center">Vehiculo</a>
 	                    <a href="#" class="list-group-item text-center">Estancia</a>
+						<a href="#" class="list-group-item text-center">Configuracion</a>
 	                </div>
 	            </div>
 
@@ -43,6 +44,11 @@
         					@include('parking.partials.estancias')
         				</div>
         			</div>
+					<div class="pos-tab-content">
+    					<div class="row">    
+        					@include('parking.partials.configuracion')
+        				</div>
+        			</div>
 
 	            </div>
         	</div>    
@@ -58,10 +64,12 @@
 	let editEstancia = false;
 	let editZona = false;
 	let editTarifa = false;
+	let editConfiguracion = false;
 	let vehiculoId;
 	let estanciaId;
 	let zonaId;
 	let tarifaId;
+	let configuracionId;
 
 
 	$( document ).ready(function() {
@@ -165,6 +173,7 @@
 			},
 			columns: [
 				{data: 'nombre'},
+				
 				{
 					data: 'status',
 					render:function(data, type, row){
@@ -176,6 +185,7 @@
 						`
 					}
 				},
+				{data: 'horas'},
 				{
 					data:'action',
 					render:function(data, type, row){
@@ -194,6 +204,7 @@
 			editEstancia = false;
 			estanciaId = null;
 			$('#estancia-nombre').val(null);
+			$('#estancia-horas').val(null);
 		});
 
 		$('#table-estancias tbody').on( 'click', 'tr td button[name=edit]', function () {
@@ -203,6 +214,7 @@
 			estanciaId = estancia.id;
 			$('#estancia-nombre').val(estancia.nombre);
 			$('#estancia-nombre').focus();
+			$('#cantidad-horas').val(estancia.horas);
 		});
 		$('#table-estancias tbody').on( 'click', 'tr td button[name=delete]', async function () {
 			let confirm = await swal({
@@ -387,6 +399,28 @@
 			// dropdownParent: $('#parent')
 		});
 
+		let selectConfiguracion = $('#configuracion').select2({
+			language: 'es',
+			ajax: {
+				url: "{{ route('parking.configuraciones.index') }}",
+				dataType: 'json',
+				processResults:function(data){
+
+					$.each(data.data, function(i, d) {
+						data.data[i].id = d.id;
+						data.data[i].text = d.nombre;
+					});
+					return {
+						results: data.data
+					};
+				},
+			},
+			escapeMarkup: function(markup) {
+	            return markup;
+	        },
+			// dropdownParent: $('#parent')
+		});
+
 		let tableTarifas = $('#table-tarifas').DataTable({
 			processing: true,
 			serverSide: true,
@@ -418,8 +452,10 @@
 					}
 				},
 				{
-					data: 'precio_hora',
-					
+					data: 'configuracion',
+					render:function(data,type,row){
+						return row.configuracion ? row.configuracion.nombre : 'Sin configuracion';
+					}
 				},
 				{
 					data: 'tiempo_gracias',
@@ -445,12 +481,12 @@
 			selectVehiculo.val(null).trigger('change');
 			selectEstancia.val(null).trigger('change');
 			selectZona.val(null).trigger('change');
+			selectConfiguracion.val(null).trigger('change');
 			$('#valorHora').val(null);
 			$('#timeValorFranccion').val(null);
 		});
 
 		$('#table-tarifas tbody').on( 'click', 'tr td button[name=edit]', function () {
-			console.log('entra');
 			editTarifa = true;
 			$('#btn-cancelar-tarifa').show();
 			let tarifa = tableTarifas.row( this.parentNode.parentNode ).data();
@@ -482,6 +518,15 @@
 				type: 'select2:select',
 				params:{
 					data:tarifa.zona
+				}
+			});
+
+			option = new Option(tarifa.configuracion.nombre, tarifa.configuracion.id, true, true);
+			selectConfiguracion.append(option).trigger('change');
+			selectConfiguracion.trigger({
+				type: 'select2:select',
+				params:{
+					data:tarifa.configuracion
 				}
 			});
 			$('#valorHora').val(tarifa.precio_hora);
@@ -523,6 +568,88 @@
 
 			});
 		});
+
+
+
+		//configuraciones 
+		let tableConfiguraciones = $('#table-configuraciones').DataTable({
+			processing: true,
+			serverSide: true,
+			searching: false,
+			ordering: false,
+			searching: false,
+			pageLength: 10,
+			ajax:{
+				url: "{{ route('parking.configuraciones.index') }}",
+				
+			},
+			columns: [
+				{data: 'nombre'},
+				{data: 'precio'},
+				{data: 'tiempo'},
+				{
+					data:'action',
+					render:function(data, type, row){
+						return ` 
+						<div style="display:flex;justify-content:space-evenly">
+							<button name="edit" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i>Editar</button>
+							<button name="delete" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i>Borrar</button>
+						</div>`;
+					}
+				}
+			]
+		});
+		
+		$('#btn-cancelar-configuracion').on('click',function(){
+			$(this).hide();
+			editConfiguracion = false;
+			configuracionId = null;
+			$('#nombre-configuracion').val(null);
+			$('#configuracion-precio').val(null);
+			$('#cantidad-minutos').val(null);
+		});
+
+		$('#table-configuraciones tbody').on( 'click', 'tr td button[name=edit]', function () {
+			editConfiguracion = true;
+			$('#btn-cancelar-configuracion').show();
+			let configuracion = tableConfiguraciones.row( this.parentNode.parentNode ).data();
+			configuracionId = configuracion.id;
+			$('#nombre-configuracion').val(configuracion.nombre);
+			$('#nombre-configuracion').focus();
+			$('#configuracion-precio').val(configuracion.precio);
+			$('#cantidad-minutos').val(configuracion.tiempo);
+		});
+		$('#table-configuraciones tbody').on( 'click', 'tr td button[name=delete]', async function () {
+			let confirm = await swal({
+              title: 'Estás seguro ?',
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            });
+
+
+			if(!confirm)  return;
+
+
+			let configuracion = tableConfiguraciones.row( this.parentNode.parentNode ).data();
+			$.ajax({
+				method: "DELETE",
+				url:`/parking/configuraciones/${configuracion.id}/delete`,
+				success:function(response){
+					if(response.success){
+						toastr.success(response.msg);
+						
+						tableConfiguraciones.ajax.reload();
+					} 
+					else toastr.error(response.msg)
+				},
+				error:function(error){
+					toastr.error('Lo sentimos ha ocurrido un error');
+				}
+
+			});
+		});
+
 	
 		
 		//boton agregar vehiculo
@@ -578,11 +705,19 @@
 				rules:{
 					nombre: {
 						required:true
+					},
+					horas:{
+						required:true,
+						min:1,
 					}
 				},
 				messages:{
 					nombre: {
 						required: 'La estancia es requerido',
+					},
+					horas: {
+						required: 'La cantidad de horas es requirida',
+						min:'La cantidad de minutos como mínimo es 1'
 					},
 				},
 				submitHandler:function(form){
@@ -597,6 +732,7 @@
 								toastr.success(response.msg);
 								$('#btn-cancelar-estancia').hide();
 								$('#estancia-nombre').val(null);
+								$('#cantidad-horas').val(null);
 								estanciaId = null;
 								editEstancia = false;
 								tableEstancias.ajax.reload();
@@ -719,12 +855,80 @@
 								selectVehiculo.val(null).trigger('change');
 								selectEstancia.val(null).trigger('change');
 								selectZona.val(null).trigger('change');
+								selectConfiguracion.val(null).trigger('change');
 								$('#valorHora').val(null);
 								$('#timeValorFranccion').val(null);
 								
 								tarifaId = null;
 								editTarifa = false;
 								tableTarifas.ajax.reload();
+							} 
+							else toastr.error(response.msg)
+
+							
+							
+						},
+						error:function(error){
+							toastr.error('Lo sentimos ha ocurrido un error');
+						}
+					});
+				}
+			}); 
+
+			form.submit();
+
+		});
+
+		//boton para guardar configuracion
+		$('#btn-guardar-configuracion').on('click',function(){
+			let form = $('#form-configuracion');
+			form.validate({
+				rules:{
+					nombre: {
+						required:true
+					},
+					precio: {
+						required:true,
+						min:1,
+					},
+					tiempo: {
+						required:true,
+						min: 1
+					}
+				},
+				messages:{
+					nombre: {
+						required: 'El vehículo es requerido'
+					},
+					precio: {
+						required:'El precio es requerido',
+						min:'Solo números mayores o iguales a 1'
+					},
+					
+					tiempo: {
+						required:'El tiempo es requerido',
+						min:'Solo números mayores o iguales a 1'
+					}
+				},
+				submitHandler:function(form){
+					let data = $(form).serialize();
+					$.ajax({
+						method: !editConfiguracion ? "POST" :"PUT",
+						url: !editConfiguracion ? $(form).attr("action") : `/parking/configuraciones/${configuracionId}/update` ,
+						dataType: "json",
+						data: data,
+						success:function(response){
+							if(response.success){
+								toastr.success(response.msg);
+								$('#btn-cancelar-configuracion').hide();
+
+								
+								$('#nombre-configuracion').val(null);
+								$('#configuracion-precio').val(null);
+								$('#cantidad-minutos').val(null);
+								configuracionId = null;
+								editConfiguracion = false;
+								tableConfiguraciones.ajax.reload();
 							} 
 							else toastr.error(response.msg)
 
