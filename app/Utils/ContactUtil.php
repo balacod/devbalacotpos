@@ -193,6 +193,9 @@ class ContactUtil extends Util
     {
         $query = Contact::leftjoin('transactions AS t', 'contacts.id', '=', 't.contact_id')
                     ->leftjoin('customer_groups AS cg', 'contacts.customer_group_id', '=', 'cg.id')
+                    ->join('subscriptions', 'subscriptions.business_id','=','contacts.business_id')
+                    ->join('packages', 'packages.id','=','subscriptions.package_id')                
+                    ->leftjoin('business AS bss', 'bss.id', '=', 'contacts.business_id')
                     ->where('contacts.business_id', $business_id);
 
         if ($type == 'supplier') {
@@ -205,8 +208,10 @@ class ContactUtil extends Util
         }
 
         $query->select([
+            'packages.is_active_vet','packages.is_active_invoice', 'packages.is_active_parka',
             'contacts.*', 
             'cg.name as customer_group',
+            'bss.enabled_modules',
             DB::raw("SUM(IF(t.type = 'opening_balance', final_total, 0)) as opening_balance"),
             DB::raw("SUM(IF(t.type = 'opening_balance', (SELECT SUM(IF(is_return = 1,-1*amount,amount)) FROM transaction_payments WHERE transaction_payments.transaction_id=t.id), 0)) as opening_balance_paid")
         ]);
@@ -231,5 +236,59 @@ class ContactUtil extends Util
         $query->groupBy('contacts.id');
 
         return $query;
+    }
+
+    public function getIsVetActive($business_id){
+
+        $query = Contact::leftjoin('transactions AS t', 'contacts.id', '=', 't.contact_id')
+                    ->leftjoin('customer_groups AS cg', 'contacts.customer_group_id', '=', 'cg.id')
+                    ->join('subscriptions', 'subscriptions.business_id','=','contacts.business_id')
+                    ->join('packages', 'packages.id','=','subscriptions.package_id')                
+                    ->leftjoin('business AS bss', 'bss.id', '=', 'contacts.business_id')
+                    ->where('contacts.business_id', $business_id);
+        $query->select([
+            'packages.is_active_vet','packages.is_active_invoice', 'packages.is_active_parka',
+            'bss.enabled_modules',
+        ]);
+        $query->groupBy('contacts.business_id');
+
+        $rest = $query->get();
+
+        if($rest != null){
+
+            $modules = json_decode($rest[0]->enabled_modules);
+            foreach ($modules as $value) {
+                if ("vet" == $value) {
+                    return true;
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+
+    }
+    public function getIsActiveModules($business_id){
+
+        $query = Contact::leftjoin('transactions AS t', 'contacts.id', '=', 't.contact_id')
+                    ->leftjoin('customer_groups AS cg', 'contacts.customer_group_id', '=', 'cg.id')
+                    ->join('subscriptions', 'subscriptions.business_id','=','contacts.business_id')
+                    ->join('packages', 'packages.id','=','subscriptions.package_id')                
+                    ->leftjoin('business AS bss', 'bss.id', '=', 'contacts.business_id')
+                    ->where('contacts.business_id', $business_id);
+        $query->select([
+            'packages.is_active_vet','packages.is_active_invoice', 'packages.is_active_parka',
+            'bss.enabled_modules',
+        ]);
+        $query->groupBy('contacts.business_id');
+
+        $rest = $query->get();
+
+        if($rest != null){
+            return $rest;
+        }else{
+            return false;
+        }
+
     }
 }

@@ -96,8 +96,12 @@ $(document).ready(function() {
             return markup;
         },
     });
+
+    var contact_pets_select = $('#contact_pets_id');
+
     $('#customer_id').on('select2:select', function(e) {
         var data = e.params.data;
+
         if (data.pay_term_number) {
             $('input#pay_term_number').val(data.pay_term_number);
         } else {
@@ -121,6 +125,23 @@ $(document).ready(function() {
             $('#price_group').val('');
             $('#price_group').change();
         }
+
+        contact_pets_select.empty();
+
+        $.each(data.mascotas_activas, (index, item) => {
+            let newOption = new Option(item.nombre, item.id, false, false);
+            contact_pets_select.append(newOption);
+        })
+
+        contact_pets_select.val(null).trigger('change');
+    });
+
+    contact_pets_select.select2({
+        // placeholder: contact_pets_select.data('placeholder'),
+        language: {
+            noResults: () => contact_pets_select.data('no-results'),
+        },
+        allowClear: true,
     });
 
     set_default_customer();
@@ -616,6 +637,8 @@ $(document).ready(function() {
         } else {
             pos_form_obj.submit();
         }
+
+        contact_pets_select.empty();
     });
 
     $('div#card_details_modal').on('shown.bs.modal', function(e) {
@@ -1848,6 +1871,15 @@ function set_default_customer() {
     }
 
     customer_set = true;
+
+    var contact_pets_select = $('#contact_pets_id');
+
+    // $.each(edit_mascotas_activas, (index, item) => {
+    //     let newOption = new Option(item.nombre, item.id, false, false);
+    //     contact_pets_select.append(newOption);
+    // })
+
+    contact_pets_select.val(edit_mascota_activa).trigger('change');
 }
 
 //Set the location and initialize printer

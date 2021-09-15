@@ -12,15 +12,16 @@
 
 <!-- Main content -->
 <section class="content">
-{!! Form::open(['url' => action('BusinessController@postBusinessSettings'), 'method' => 'post', 'id' => 'bussiness_edit_form',
-           'files' => true ]) !!}
+{!! Form::open(['url' => action('BusinessController@postBusinessSettings'), 'method' => 'post', 'id' => 'bussiness_edit_form','files' => true ]) !!}
     <div class="row">
         <div class="col-xs-12">
        <!--  <pos-tab-container> -->
         <div class="col-xs-12 pos-tab-container">
+            <!-- LISTA TAB -->
             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 pos-tab-menu">
                 <div class="list-group">
                     <a href="#" class="list-group-item text-center active">@lang('business.business')</a>
+                    <!-- <a href="#" class="list-group-item text-center">Configuración de Facturación Electronica</a> -->
                     <a href="#" class="list-group-item text-center">@lang('business.tax') @show_tooltip(__('tooltip.business_tax'))</a>
                     <a href="#" class="list-group-item text-center">@lang('business.product')</a>
                     <a href="#" class="list-group-item text-center">@lang('contact.contact')</a>
@@ -37,10 +38,14 @@
                     <a href="#" class="list-group-item text-center">@lang('lang_v1.custom_labels')</a>
                 </div>
             </div>
+
             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 pos-tab">
                 <!-- tab 1 start -->
                 @include('business.partials.settings_business')
                 <!-- tab 1 end -->
+                <!-- form de datos facturador -->
+                <!-- @include('business.partials.settings_invoice') -->
+
                 <!-- tab 2 start -->
                 @include('business.partials.settings_tax')
                 <!-- tab 2 end -->
@@ -196,5 +201,41 @@
             },
         });
     });
+    function selectDepto(e) {
+        
+        $("#municipioSelect").empty();
+        $.ajax({
+            method: 'post',
+            data: {id:e},
+            url: "{{ action('BusinessController@municipio') }}",
+            dataType: 'json',
+            success: function(result) {
+                let html = "";
+                html += "<label>Municipio</label> <div class='input-group'> <span class='input-group-addon'> <i class='fas fa-file-alt'></i> </span>";
+                html += "<select class='form-control' name='municipio'>";
+                for (var i = 0; i < result.length; i++) {
+                    // console.log(result[i].id);
+                    // if(result[i].id == id){
+                    //     html += "<option selected='selected' value='"+result[i].id+"'>'"+result[i].name+"'</option>";
+                    // }else{
+                        html += "<option value='"+result[i].id+"'>"+result[i].name+"</option>";
+                    // }
+                }
+                html += "</select>"
+                $("#municipioSelect").append(html);
+                // if (result.success == true) {
+                //     swal({
+                //         text: result.msg,
+                //         icon: 'success'
+                //     });
+                // } else {
+                //     swal({
+                //         text: result.msg,
+                //         icon: 'error'
+                //     });
+                // }
+            },
+        });
+   }
 </script>
 @endsection

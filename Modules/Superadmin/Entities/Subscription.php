@@ -84,6 +84,21 @@ class Subscription extends Model
 
         return $subscription;
     }
+    public static function active_subscription_package($business_id){
+
+        $date_today = \Carbon::today()->toDateString();
+        
+        $subscription = DB::table('subscriptions')
+                            ->select('packages.is_active_vet','packages.is_active_invoice','packages.is_active_parka')
+                            ->join('packages', 'packages.id','=','subscriptions.package_id')
+                            ->where('business_id', $business_id)
+                            ->whereDate('start_date', '<=', $date_today)
+                            ->whereDate('end_date', '>=', $date_today)
+                            ->get();
+
+        return $subscription;
+    }
+
 
     /**
      * Returns the upcoming subscription details for a business

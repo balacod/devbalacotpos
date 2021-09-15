@@ -43,6 +43,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     
     Route::post('/test-email', 'BusinessController@testEmailConfiguration');
     Route::post('/test-sms', 'BusinessController@testSmsConfiguration');
+    Route::post('/municipio', 'BusinessController@municipio');
+    Route::post('/config-company', 'BusinessController@saveCompanyInvoice');
     Route::get('/business/settings', 'BusinessController@getBusinessSettings')->name('business.getBusinessSettings');
     Route::post('/business/update', 'BusinessController@postBusinessSettings')->name('business.postBusinessSettings');
     Route::get('/user/profile', 'UserController@getProfile')->name('user.getProfile');
@@ -52,6 +54,40 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('brands', 'BrandController');
     
     // Route::resource('payment-account', 'PaymentAccountController');
+
+    Route::resource('/parking', 'ParkController');
+    // Route::resource('/parking/vehiculos','VehiculosController');
+    Route::get('/parking/lista', 'ParkController@listaTarifa');
+
+    //vehiculos
+    Route::get('/parking/vehiculos/get-vehiculos','VehiculosController@index')->name('parking.vehiculos.index');
+    Route::post('/parking/vehiculos/store','VehiculosController@store')->name('parking.vehiculos.store');
+    Route::put('/parking/vehiculos/{vehiculo}/update','VehiculosController@update')->name('parking.vehiculos.update');
+    Route::delete('/parking/vehiculos/{vehiculo}/delete','VehiculosController@destroy')->name('parking.vehiculos.destroy');
+    
+    //Estancias
+    Route::get('/parking/estancias/get-estancias','EstanciaController@index')->name('parking.estancias.index');
+    Route::post('/parking/estancias/store','EstanciaController@store')->name('parking.estancias.store');
+    Route::put('/parking/estancias/{estancia}/update','EstanciaController@update')->name('parking.estancias.update');
+    Route::delete('/parking/estancias/{estancia}/delete','EstanciaController@destroy')->name('parking.estancias.destroy');
+    //Zonas
+    Route::get('/parking/zonas/get-zonas','ZonasController@index')->name('parking.zonas.index');
+    Route::post('/parking/zonas/store','ZonasController@store')->name('parking.zonas.store');
+    Route::put('/parking/zonas/{zona}/update','ZonasController@update')->name('parking.zonas.update');
+    Route::delete('/parking/zonas/{zona}/delete','ZonasController@destroy')->name('parking.zonas.destroy');
+    
+    //Tarifas
+    Route::get('/parking/tarifas/get-tarifas','TarifasController@index')->name('parking.tarifas.index');
+    Route::post('/parking/tarifas/store','TarifasController@store')->name('parking.tarifas.store');
+    Route::put('/parking/tarifas/{tarifa}/update','TarifasController@update')->name('parking.tarifas.update');
+    Route::delete('/parking/tarifas/{tarifa}/delete','TarifasController@destroy')->name('parking.tarifas.destroy');
+
+    //CONFIGURACIONES
+    Route::get('/parking/configuraciones/get-configuraciones','ConfiguracionController@index')->name('parking.configuraciones.index');
+    Route::post('/parking/configuraciones/store','ConfiguracionController@store')->name('parking.configuraciones.store');
+    Route::put('/parking/configuraciones/{configuracion}/update','ConfiguracionController@update')->name('parking.configuraciones.update');
+    Route::delete('/parking/configuraciones/{configuracion}/delete','ConfiguracionController@destroy')->name('parking.configuraciones.destroy');
+
 
     Route::resource('tax-rates', 'TaxRateController');
 
@@ -68,6 +104,18 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/contacts/check-contact-id', 'ContactController@checkContactId');
     Route::get('/contacts/customers', 'ContactController@getCustomers');
     Route::resource('contacts', 'ContactController');
+
+    //veterinari
+    Route::get('vet/list', 'VetController@lista');
+    Route::get('vet/lista-consulta', 'VetController@listaConsultas');
+    Route::get('vet/lista-linea', 'VetController@listaConsultasAlta');
+    Route::get('vet/consultas/{id}', 'VetController@consultas');
+    Route::post('vet/consulta', 'VetController@consulta');
+    Route::post('vet/alta', 'VetController@alta');
+    Route::post('vet/store', 'VetController@store');
+    Route::get('vet/hojavida/{id}', 'VetController@hojavida');
+    Route::get('vet/hojaconsulta/{id}', 'VetController@hojaconsulta');
+    Route::resource('vet', 'VetController');
 
     Route::get('taxonomies-ajax-index-page', 'TaxonomyController@getTaxonomyIndexPage');
     Route::resource('taxonomies', 'TaxonomyController');
@@ -335,6 +383,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::get('bookings/get-todays-bookings', 'Restaurant\BookingController@getTodaysBookings');
     Route::resource('bookings', 'Restaurant\BookingController');
+    
     
     Route::resource('types-of-service', 'TypesOfServiceController');
     Route::get('sells/edit-shipping/{id}', 'SellController@editShipping');

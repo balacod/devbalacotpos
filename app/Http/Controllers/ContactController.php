@@ -9,6 +9,7 @@ use App\CustomerGroup;
 use App\Notifications\CustomerNotification;
 use App\PurchaseLine;
 use App\Transaction;
+use App\Mascota;
 use App\User;
 use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;
@@ -21,6 +22,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use App\TransactionPayment;
 use Spatie\Activitylog\Models\Activity;
+use Modules\Superadmin\Entities\Subscription;
 
 class ContactController extends Controller
 {
@@ -58,7 +60,7 @@ class ContactController extends Controller
     public function index()
     {
         $type = request()->get('type');
-
+        
         $types = ['supplier', 'customer'];
 
         if (empty($type) || !in_array($type, $types)) {
@@ -108,7 +110,7 @@ class ContactController extends Controller
             )
             ->addColumn(
                 'action',
-                function ($row) {
+                function ($row) {                    
                     $html = '<div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
                         data-toggle="dropdown" aria-expanded="false">' .
@@ -148,6 +150,8 @@ class ContactController extends Controller
                     }
 
                     $html .= '<li class="divider"></li>';
+                        
+
                     if (auth()->user()->can('supplier.view')) {
                         $html .= '
                                 <li>
@@ -180,6 +184,7 @@ class ContactController extends Controller
                                 </a>
                             </li>';
                         }
+
 
                         $html .= '<li>
                                 <a href="' . action('ContactController@show', [$row->id]) . '?view=documents_and_notes">
@@ -251,7 +256,6 @@ class ContactController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
-
         $query = $this->contactUtil->getContactQuery($business_id, 'customer');
 
         $contacts = Datatables::of($query)
@@ -267,6 +271,7 @@ class ContactController extends Controller
             ->addColumn(
                 'action',
                 function ($row) {
+                    
                     $html = '<div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
                         data-toggle="dropdown" aria-expanded="false">' .
@@ -337,6 +342,42 @@ class ContactController extends Controller
                                 </a>
                             </li>';
                         }
+
+                        if(isset($row->is_active_vet)){        
+                            if($row->is_active_vet == 1){
+
+                                $modules = json_decode($row->enabled_modules);
+                                foreach ($modules as $value) {
+                                    if ("vet" == $value) {
+                                        $html .=  '<li>
+                                            <a href="' . action('ContactController@show', [$row->id]). '?view=vet">
+                                                <i class="fas fa-arrow-circle-up" aria-hidden="true"></i>
+                                                ' . __("sale.vet") . '
+                                            </a>
+                                        </li>';
+                                    }    
+                                }  
+                            }
+                        }
+
+                        if(isset($row->is_active_parka)){        
+                            if($row->is_active_parka == 1){
+
+                                $modules = json_decode($row->enabled_modules);
+                                foreach ($modules as $value) {
+                                    if ("parka" == $value) {
+                                        $html .=  '<li>
+                                            <a href="' . action('ContactController@show', [$row->id]). '?view=park">
+                                                <i class="fas fa-arrow-circle-up" aria-hidden="true"></i>
+                                                ' . __("sale.park") . '
+                                            </a>
+                                        </li>';
+                                    }    
+                                }  
+                            }
+                        }
+
+                        
 
                         $html .= '<li>
                                 <a href="' . action('ContactController@show', [$row->id]) . '?view=documents_and_notes">
@@ -413,6 +454,7 @@ class ContactController extends Controller
         if (!$reward_enabled) {
             $contacts->removeColumn('total_rp');
         }
+
         return $contacts->rawColumns(['action', 'opening_balance', 'credit_limit', 'pay_term', 'due', 'return_due', 'name', 'balance'])
                         ->make(true);
     }
@@ -519,7 +561,7 @@ class ContactController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $contact = $this->contactUtil->getContactInfo($business_id, $id);
-
+        
         $reward_enabled = (request()->session()->get('business.enable_rp') == 1 && in_array($contact->type, ['customer', 'both'])) ? true : false;
 
         $contact_dropdown = Contact::contactDropdown($business_id, false, false);
@@ -538,9 +580,21 @@ class ContactController extends Controller
            ->with(['causer', 'subject'])
            ->latest()
            ->get();
+        $flagVet = false;
+        $flagPark = false;
+
+        $moduleActive = $this->contactUtil->getIsActiveModules($business_id);
         
+        if($moduleActive != null){
+            if($moduleActive[0]->is_active_parka){
+                $flagPark = true;
+            }
+            if($moduleActive[0]->is_active_vet){
+                $flagVet = true;
+            }
+        }
         return view('contact.show')
-             ->with(compact('contact', 'reward_enabled', 'contact_dropdown', 'business_locations', 'view_type', 'contact_view_tabs', 'activities'));
+             ->with(compact('flagPark','flagVet','contact', 'reward_enabled', 'contact_dropdown', 'business_locations', 'view_type', 'contact_view_tabs', 'activities'));
     }
 
     /**
@@ -704,9 +758,11 @@ class ContactController extends Controller
             $business_id = request()->session()->get('user.business_id');
             $user_id = request()->session()->get('user.id');
 
-            $contacts = Contact::where('contacts.business_id', $business_id)
-                            ->leftjoin('customer_groups as cg', 'cg.id', '=', 'contacts.customer_group_id')
-                            ->active();
+            $contacts = Contact::with('mascotas_activas')
+                ->where('contacts.business_id', $business_id)
+                ->leftjoin('customer_groups as cg', 'cg.id', '=', 'contacts.customer_group_id')
+                ->active();
+
 
             $selected_contacts = User::isSelectedContacts($user_id);
             if ($selected_contacts) {
@@ -722,6 +778,7 @@ class ContactController extends Controller
                             ->orWhere('contacts.contact_id', 'like', '%' . $term .'%');
                 });
             }
+            
 
             $contacts->select(
                 'contacts.id',
@@ -740,14 +797,22 @@ class ContactController extends Controller
                 'supplier_business_name',
                 'cg.amount as discount_percent',
                 'cg.price_calculation_type',
+
                 'cg.selling_price_group_id'
             )
-                    ->onlyCustomers();
+            ->onlyCustomers();
+
 
             if (request()->session()->get('business.enable_rp') == 1) {
                 $contacts->addSelect('total_rp');
             }
+
             $contacts = $contacts->get();
+
+            foreach($contacts as $key => $value){
+                    $mascotas = Mascota::where('cliente_id', $contacts[$key]->id)->where('status',1)->get();
+                    $contacts[$key]['mascotas']  = $mascotas;
+            }            
             return json_encode($contacts);
         }
     }

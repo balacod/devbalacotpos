@@ -23,7 +23,7 @@ class AdminSidebarMenu
 
         Menu::create('admin-sidebar-menu', function ($menu) {
             $enabled_modules = !empty(session('business.enabled_modules')) ? session('business.enabled_modules') : [];
-
+            // dd($enabled_modules);
             $is_admin = auth()->user()->hasRole('Admin#' . session('business.id')) ? true : false;
             //Home
             $menu->url(action('HomeController@index'), __('home.home'), ['icon' => 'fa fas fa-tachometer-alt', 'active' => request()->segment(1) == 'home'])->order(5);
@@ -57,6 +57,14 @@ class AdminSidebarMenu
                     },
                     ['icon' => 'fa fas fa-users']
                 )->order(10);
+            }
+
+            if (in_array('parka', $enabled_modules)) {
+                $menu->url(
+                    action('ParkController@index'), 
+                    __('lang_v1.parking'), 
+                    ['icon' => 'fa fas fa-truck', 'active' => request()->segment(1) == 'parking'])
+                ->order(86);
             }
 
             //Contacts dropdown
@@ -709,6 +717,9 @@ class AdminSidebarMenu
                     ['icon' => 'fa fas fa-cog', 'id' => 'tour_step3']
                 )->order(85);
             }
+
+            
+
         });
         
         //Add menus from modules

@@ -9,6 +9,7 @@
             <th>@lang('sale.invoice_no')</th>
             <th>@lang('sale.customer_name')</th>
             <th>@lang('lang_v1.contact_no')</th>
+            <th>@lang('lang_v1.column_pet')</th>
             <th>@lang('sale.location')</th>
             <th>@lang('sale.payment_status')</th>
             <th>@lang('lang_v1.payment_method')</th>
@@ -30,7 +31,7 @@
     </thead>
     <tfoot>
         <tr class="bg-gray font-17 footer-total text-center">
-            <td colspan="6"><strong>@lang('sale.total'):</strong></td>
+            <td colspan="7"><strong>@lang('sale.total'):</strong></td>
             <td class="footer_payment_status_count"></td>
             <td class="payment_method_count"></td>
             <td class="footer_sale_total"></td>

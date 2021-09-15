@@ -20,7 +20,7 @@
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <title>@yield('title') - {{ Session::get('business.name') }}</title>
         
         @include('layouts.partials.css')

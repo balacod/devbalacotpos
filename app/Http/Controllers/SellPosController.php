@@ -57,6 +57,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 use App\InvoiceScheme;
+use Modules\Superadmin\Entities\Subscription;
 
 class SellPosController extends Controller
 {
@@ -244,8 +245,10 @@ class SellPosController extends Controller
         $invoice_schemes = InvoiceScheme::forDropdown($business_id);
         $default_invoice_schemes = InvoiceScheme::getDefault($business_id);
 
+        $flagVent = $this->contactUtil->getIsVetActive($business_id);
         return view('sale_pos.create')
             ->with(compact(
+                'flagVent',
                 'business_locations',
                 'bl_attributes',
                 'business_details',
@@ -430,7 +433,6 @@ class SellPosController extends Controller
                 //Upload Shipping documents
                 Media::uploadMedia($business_id, $transaction, $request, 'shipping_documents', false, 'shipping_document');
                 
-
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
                 
                 if (!$is_direct_sale) {
@@ -661,7 +663,7 @@ class SellPosController extends Controller
             'decimal_separator' => $business_details->decimal_separator,
         ];
         $receipt_details->currency = $currency_details;
-        
+
         if ($is_package_slip) {
             $output['html_content'] = view('sale_pos.receipts.packing_slip', compact('receipt_details'))->render();
             return $output;
@@ -966,9 +968,9 @@ class SellPosController extends Controller
         }
 
         $invoice_layouts = InvoiceLayout::forDropdown($business_id);
-
+        $flagVent = $this->contactUtil->getIsVetActive($business_id);
         return view('sale_pos.edit')
-            ->with(compact('business_details', 'taxes', 'payment_types', 'walk_in_customer', 'sell_details', 'transaction', 'payment_lines', 'location_printer_type', 'shortcuts', 'commission_agent', 'categories', 'pos_settings', 'change_return', 'types', 'customer_groups', 'brands', 'accounts', 'waiters', 'redeem_details', 'edit_price', 'edit_discount', 'shipping_statuses', 'warranties', 'sub_type', 'pos_module_data', 'invoice_schemes', 'default_invoice_schemes', 'invoice_layouts', 'featured_products'));
+            ->with(compact('flagVent','business_details', 'taxes', 'payment_types', 'walk_in_customer', 'sell_details', 'transaction', 'payment_lines', 'location_printer_type', 'shortcuts', 'commission_agent', 'categories', 'pos_settings', 'change_return', 'types', 'customer_groups', 'brands', 'accounts', 'waiters', 'redeem_details', 'edit_price', 'edit_discount', 'shipping_statuses', 'warranties', 'sub_type', 'pos_module_data', 'invoice_schemes', 'default_invoice_schemes', 'invoice_layouts', 'featured_products'));
     }
 
     /**

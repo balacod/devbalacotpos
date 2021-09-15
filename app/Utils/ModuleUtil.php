@@ -10,7 +10,7 @@ use App\System;
 use App\Transaction;
 use App\User;
 use Composer\Semver\Comparator;
-
+use Modules\Superadmin\Entities\Subscription;
 class ModuleUtil extends Util
 {
     /**
@@ -472,6 +472,7 @@ class ModuleUtil extends Util
 
     public function availableModules()
     {
+        
         return [
             'purchases' => ['name' => __('purchase.purchases')],
             'add_sale' => ['name' => __('sale.add_sale')],
@@ -495,12 +496,15 @@ class ModuleUtil extends Util
                 'name' => __('restaurant.kitchen_for_restaurant')
             ],
             'subscription' => ['name' => __('lang_v1.enable_subscription')],
+            'vet' => ['name' => __('lang_v1.enable_vet')],
+            'incoive' => ['name' => __('lang_v1.enable_invoice')],
+            'parka' => ['name' => __('lang_v1.enable_parka')],
             'types_of_service' => ['name' => __('lang_v1.types_of_service'),
                         'tooltip' => __('lang_v1.types_of_service_help_long')
                     ]
         ];
     }
-
+    
     /**
      * Validate module category types and
      * return module category data if validates

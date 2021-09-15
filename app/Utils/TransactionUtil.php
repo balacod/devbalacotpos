@@ -86,6 +86,7 @@ class TransactionUtil extends Util
             'exchange_rate' => !empty($input['exchange_rate']) ?
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
             'selling_price_group_id' => isset($input['selling_price_group_id']) ? $input['selling_price_group_id'] : null,
+            'mascota_id' => isset($input['mascota_id']) ? $input['mascota_id'] : null,
             'pay_term_number' => isset($input['pay_term_number']) ? $input['pay_term_number'] : null,
             'pay_term_type' => isset($input['pay_term_type']) ? $input['pay_term_type'] : null,
             'is_suspend' => !empty($input['is_suspend']) ? 1 : 0,
@@ -180,6 +181,7 @@ class TransactionUtil extends Util
             'exchange_rate' => !empty($input['exchange_rate']) ?
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
             'selling_price_group_id' => isset($input['selling_price_group_id']) ? $input['selling_price_group_id'] : null,
+            'mascota_id' => isset($input['mascota_id']) ? $input['mascota_id'] : null,
             'pay_term_number' => isset($input['pay_term_number']) ? $input['pay_term_number'] : null,
             'pay_term_type' => isset($input['pay_term_type']) ? $input['pay_term_type'] : null,
             'is_suspend' => !empty($input['is_suspend']) ? 1 : 0,
@@ -897,14 +899,12 @@ class TransactionUtil extends Util
         if ($il->show_customer == 1) {
             $output['customer_label'] = !empty($il->customer_label) ? $il->customer_label : '';
             $output['customer_name'] = !empty($customer->name) ? $customer->name: '';
-            $output['customer_mobile'] = $customer->mobile;
             
             if (!empty($output['customer_name']) && $receipt_printer_type != 'printer') {
                 $output['customer_info'] .= $customer->contact_address;
                 if (!empty($customer->contact_address)) {
                     $output['customer_info'] .= '<br>';
                 }
-                $output['customer_info'] .= $customer->mobile;
                 if (!empty($customer->landline)) {
                     $output['customer_info'] .= ', ' . $customer->landline;
                 }
@@ -930,6 +930,10 @@ class TransactionUtil extends Util
             if (!empty($temp)) {
                 $output['customer_custom_fields'] .= implode('<br>', $temp);
             }
+        }
+
+        if ($il->show_customer_phone == 1) {
+            $output['customer_mobile'] = $customer->mobile;
         }
 
         if ($il->show_reward_point == 1) {
@@ -1404,6 +1408,9 @@ class TransactionUtil extends Util
 
         $output['design'] = $il->design;
         $output['table_tax_headings'] = !empty($il->table_tax_headings) ? array_filter(json_decode($il->table_tax_headings), 'strlen') : null;
+
+        $output['mascota'] = $transaction->mascota ? $transaction->mascota->toArray() : null;
+
         return (object)$output;
     }
 

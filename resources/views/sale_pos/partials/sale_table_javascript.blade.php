@@ -73,6 +73,7 @@ sell_table = $('#sell_table').DataTable({
             { data: 'invoice_no', name: 'invoice_no'},
             { data: 'conatct_name', name: 'conatct_name'},
             { data: 'mobile', name: 'contacts.mobile'},
+            { data: 'mascota_nombre', name: 'mascota.nombre'},
             { data: 'business_location', name: 'bl.name'},
             { data: 'payment_status', name: 'payment_status'},
             { data: 'payment_methods', orderable: false, "searchable": false},

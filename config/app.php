@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'Asia/Kolkata'),
+    'timezone' => env('APP_TIMEZONE', 'America/cancun'),
 
     /*
     |--------------------------------------------------------------------------
@@ -178,7 +178,8 @@ return [
         Milon\Barcode\BarcodeServiceProvider::class,
         ConsoleTVs\Charts\ChartsServiceProvider::class,
         App\Providers\DropboxServiceProvider::class,
-
+        Codedge\Fpdf\FpdfServiceProvider::class, 
+        
     ],
 
     /*
@@ -237,5 +238,6 @@ return [
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
         'Datatables' => Yajra\DataTables\Facades\DataTables::class,
         'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
+        'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class
     ]
 ];

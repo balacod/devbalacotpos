@@ -10,8 +10,6 @@
     </head>
     <body>
         <div class="ticket">
-        	
-        	
         	@if(!empty($receipt_details->logo))
         		<div class="text-box centered">
         			<img style="max-height: 100px; width: auto;" src="{{$receipt_details->logo}}" alt="Logo">
@@ -191,26 +189,74 @@
 
 	        <!-- customer info -->
 	        <div class="textbox-info">
+
 	        	<p style="vertical-align: top;"><strong>
 	        		{{$receipt_details->customer_label ?? ''}}
 	        	</strong></p>
 
 	        	<p>
-	        		{{ $receipt_details->customer_name ?? '' }}
+	        		<!--{{ $receipt_details->customer_name ?? '' }}-->
 	        		@if(!empty($receipt_details->customer_info))
 	        			<div class="bw">
 						{!! $receipt_details->customer_info !!}
 						</div>
 					@endif
 	        	</p>
+				<p>
+	        		<!--{{ $receipt_details->customer_name ?? '' }}-->
+	        		@if(!empty($receipt_details->customer_mobile))
+	        			<div class="bw">
+						{!! $receipt_details->customer_mobile !!}
+						</div>
+					@endif
+	        	</p>
+	        	<table border="0" style="margin-top: 5px;">
+	        		<tr>
+	        			<td width="20%" style="vertical-align: top;">
+        					<strong>{{$receipt_details->customer_label ?? ''}}</strong>
+	        			</td>
+	        			@if($receipt_details->mascota)
+	        			<td width="20%" style="vertical-align: top;">
+	        				<strong>
+	        				@if($receipt_details->customer_label == 'Cliente')
+	        					Mascota
+	        				@else
+	        					Pet
+	        				@endif
+	        				</strong>
+	        			</td>
+	        			@endif
+	        		</tr>
+	        		<tr>
+	        			<td style="vertical-align: top;">
+			        		{{ $receipt_details->customer_name ?? '' }}
+			        		@if(!empty($receipt_details->customer_info))
+			        			<div class="bw">
+								{!! $receipt_details->customer_info !!}
+								</div>
+							@endif
+	        			</td>
+	        			@if($receipt_details->mascota)
+	        			<td style="vertical-align: top;">
+        					{{ $receipt_details->mascota['nombre'] }}
+	        			</td>
+	        			@endif
+	        		</tr>
+	        	</table>
+
 	        </div>
 			
 			@if(!empty($receipt_details->client_id_label))
 				<div class="textbox-info">
-					<p class="f-left"><strong>
+					<p style="vertical-align: top;"><strong>
 						{{ $receipt_details->client_id_label }}
 					</strong></p>
-					<p class="f-right">
+				</div>
+			@endif
+
+			@if(!empty($receipt_details->client_id))
+				<div class="textbox-info">
+					<p>
 						{{ $receipt_details->client_id }}
 					</p>
 				</div>

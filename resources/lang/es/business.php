@@ -3,6 +3,8 @@
 "register_and_get_started_in_minutes" => "Registrarse y comenzar en minutos",
 "business_name" => "Nombre de la empresa", /* modified */
 "start_date" => "Fecha de inicio",
+"identificacion" => "Identificación",
+"dv" => "Dv",
 "currency" => "Moneda",
 "currency_placeholder" => "Seleccione el tipo de moneda",
 "upload_logo" => "Cargar logotipo",

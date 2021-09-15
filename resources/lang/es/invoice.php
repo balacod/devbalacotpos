@@ -53,6 +53,7 @@
 "invoice_heading_paid" => "Sufijo de encabezado por pagado",
 "show_payments" => "Mostrar información de pago",
 "show_customer" => "Mostrar información del cliente",
+"show_customer_phone" => "Mostrar teléfono del cliente",
 "paid_label" => "Etiqueta de cantidad pagada",
 "customer_label" => "Etiqueta de cliente",
 ];

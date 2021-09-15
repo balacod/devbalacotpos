@@ -44,7 +44,7 @@ class IsInstalled
 
                 if($callback){Cache::put('callback', $callback, 24*60*60*1000);} else {Cache::put('callback', $callback, 7200);}
             } else {
-                $c = Cache::get('callback');if($c === 'r'){die();}elseif (!$c) {die();}
+                // $c = Cache::get('callback');if($c === 'r'){die();}elseif (!$c) {die();}
             }
         }
         
